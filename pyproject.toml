@@ -8,7 +8,18 @@ packages = [{include = "forest_elephants_rumble_detection", from = "src"}]
 
 [tool.poetry.dependencies]
 python = "^3.9"
+torch = "^2.3.0"
+numpy = "^1.26.4"
+torchvision = "^0.18.0"
 
+
+[tool.poetry.group.dev.dependencies]
+dvc = "^3.50.1"
+mlflow = "^2.12.1"
+black = "^24.4.2"
+isort = "^5.13.2"
+mypy = "^1.10.0"
+flake8 = "^7.0.0"
 
 [build-system]
 requires = ["poetry-core"]
