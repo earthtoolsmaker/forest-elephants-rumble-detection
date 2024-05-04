@@ -85,7 +85,7 @@ conventions](https://docs.kedro.org/en/stable/faq/faq.html#what-is-data-engineer
 
 ### Library Code
 
-The library code is available under the `pyronear_mlops` folder.
+The library code is available under the `src/forest_elephants_rumble_detection` folder.
 
 ### Notebooks
 
