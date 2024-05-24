@@ -15,6 +15,7 @@ librosa = "^0.10.2"
 torchaudio = "^2.3.0"
 matplotlib = "^3.8.4"
 ipython = "^8.24.0"
+tqdm = "^4.66.4"
 
 
 [tool.poetry.group.dev.dependencies]
