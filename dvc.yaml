@@ -1,0 +1,12 @@
+---
+stages:
+  build_features:
+    cmd:
+      - >-
+        python ./scripts/data/make_spectograms.py
+        --output-dir ./data/02_features/rumbles/spectrograms/
+        --loglevel "info"
+    deps:
+      - ./scripts/data/make_spectograms.py
+    outs:
+      - ./data/02_features/rumbles/spectrograms/

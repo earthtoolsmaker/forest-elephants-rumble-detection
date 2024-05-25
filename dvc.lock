@@ -1,0 +1,17 @@
+schema: '2.0'
+stages:
+  build_features:
+    cmd:
+    - python ./scripts/data/make_spectograms.py --output-dir ./data/02_features/rumbles/spectrograms/
+      --loglevel "info"
+    deps:
+    - path: ./scripts/data/make_spectograms.py
+      hash: md5
+      md5: 1460cc42d3715e3d057d5993447bec2b
+      size: 7679
+    outs:
+    - path: ./data/02_features/rumbles/spectrograms/
+      hash: md5
+      md5: ff09a5c5cf77d0eb6a5453de9a80b07a.dir
+      size: 3670839537
+      nfiles: 70650

@@ -180,7 +180,7 @@ def build_training_dataset(
     df = prepare_df(df_rumble_clearings)
     audio_filepaths = [fp for fp in df["audio_filepath"].unique() if fp.exists()]
 
-    for audio_filepath in tqdm(audio_filepaths[0:1]):
+    for audio_filepath in tqdm(audio_filepaths):
         logging.info(f"audio_filepath: {audio_filepath}")
         output_audio_filepath_dir = output_dir / audio_filepath.stem
         output_audio_filepath_dir.mkdir(exist_ok=True, parents=True)
@@ -232,7 +232,7 @@ if __name__ == "__main__":
         logging.info(args)
         build_training_dataset(
             filepath_rumble_clearings=args["filepath_rumble_clearings"],
-            output_dir=args["output_dir"],
+            output_dir=args["output_dir"] / "training",
             duration=args["duration"],
             freq_min=args["freq_min"],
             freq_max=args["freq_max"],
