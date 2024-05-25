@@ -21,6 +21,7 @@ from forest_elephants_rumble_detection.data.spectrogram import (
     prepare_df,
     select_rumbles_at,
 )
+from forest_elephants_rumble_detection.utils import yaml_write
 
 
 def make_cli_parser() -> argparse.ArgumentParser:
@@ -161,6 +162,18 @@ def build_training_dataset(
     """Main entry point to generate the spectrogram from the training data
     file."""
 
+    logging.info("Persisting parameters used to generate the dataset")
+    output_dir.mkdir(exist_ok=True, parents=True)
+    yaml_write(
+        to=output_dir / "config.yaml",
+        data={
+            "duration": duration,
+            "freq_min": freq_min,
+            "freq_max": freq_max,
+            "random_seed": random_seed,
+            "ratio_random_offsets": ratio_random_offsets,
+        },
+    )
     logging.info(f"Loading and parsing {filepath_rumble_clearings}")
     df_rumble_clearings = parse_text_file(filepath_rumble_clearings)
     logging.info(f"Preparing dataframe")
