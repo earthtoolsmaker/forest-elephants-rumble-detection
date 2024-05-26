@@ -1,18 +1,40 @@
 ---
 stages:
-  build_features:
+  # build_features:
+  #   cmd:
+  #     - >-
+  #       python ./scripts/data/build_features.py
+  #       --input-rumbles-dir "./data/01_raw/cornell_data/Rumble/"
+  #       --output-dir "./data/02_features/rumbles/spectrograms/"
+  #       --duration 60.0
+  #       --freq-min 0.0
+  #       --freq-max 250.0
+  #       --random-seed 0
+  #       --ratio-random-offsets 0.2
+  #       --loglevel "info"
+  #   deps:
+  #     - ./scripts/data/build_features.py
+  #   outs:
+  #     - ./data/02_features/rumbles/spectrograms/
+  # build_yolov8_model_input:
+  #   cmd:
+  #     - >-
+  #       python ./scripts/data/build_yolov8_model_input.py
+  #       --input-features "./data/02_features/rumbles/spectrograms/"
+  #       --output-dir "./data/03_model_input/yolov8/"
+  #       --loglevel "info"
+  #   deps:
+  #     - ./scripts/data/build_yolov8_model_input.py
+  #   outs:
+  #     - ./data/03_model_input/yolov8/
+  build_yolov8_model_input:
     cmd:
       - >-
-        python ./scripts/data/build_features.py.py
-        --input-rumbles-dir "./data/01_raw/cornell_data/Rumble/"
-        --output-dir "./data/02_features/rumbles/spectrograms_test2"
-        --duration 60.0
-        --freq-min 0.0
-        --freq-max 250.0
-        --random-seed 0
-        --ratio-random-offsets 0.2
+        python ./scripts/data/build_yolov8_model_input.py
+        --input-features "./data/02_features/rumbles/spectrograms_test/"
+        --output-dir "./data/03_model_input/yolov8/"
         --loglevel "info"
     deps:
-      - ./scripts/data/build_features.py
+      - ./scripts/data/build_yolov8_model_input.py
     outs:
-      - ./data/02_features/rumbles/spectrograms_test2/
+      - ./data/03_model_input/yolov8/
