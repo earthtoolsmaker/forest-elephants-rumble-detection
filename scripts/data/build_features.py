@@ -1,8 +1,6 @@
 """Script to generate spectrograms from the raw audio files and the provided
 raven pro txt files containing the annotated rumbles."""
 
-# FIXME: make_spectogram.py -> build_features.py
-
 import argparse
 import logging
 from pathlib import Path
@@ -16,7 +14,7 @@ import forest_elephants_rumble_detection.data.features.testing as features_testi
 import forest_elephants_rumble_detection.data.features.training as features_training
 from forest_elephants_rumble_detection.data.audio import load_audio
 from forest_elephants_rumble_detection.data.offsets import get_offsets
-from forest_elephants_rumble_detection.data.spectrogram import (  # bboxes_to_yolov8_txt_format,; load_audio,
+from forest_elephants_rumble_detection.data.spectrogram import (
     df_rumbles_to_all_spectrogram_yolov8_bboxes,
     make_spectrogram,
     select_rumbles_at,
@@ -28,15 +26,6 @@ from forest_elephants_rumble_detection.utils import yaml_write
 def make_cli_parser() -> argparse.ArgumentParser:
     """Makes the CLI parser."""
     parser = argparse.ArgumentParser()
-    # TODO: get rid of this and derive it from the input_rumbles_dir
-    # parser.add_argument(
-    #     "--filepath-rumble-clearings",
-    #     help="filepath pointing to the rumble clearings txt file exported from raven pro",
-    #     type=Path,
-    #     default=Path(
-    #         "./data/01_raw/cornell_data/Rumble/Training/Clearings/rumble_clearing_00-24hr_56days.txt"
-    #     ),
-    # )
     parser.add_argument(
         "--input-rumbles-dir",
         help="dir containing the rumbles.",
@@ -47,7 +36,7 @@ def make_cli_parser() -> argparse.ArgumentParser:
         "--output-dir",
         help="path to save the generated spectrograms.",
         type=Path,
-        default=Path("./data/02_features/rumbles/spectrograms"),
+        default=Path("./data/02_features/rumbles/spectrograms_test"),
     )
     parser.add_argument(
         "--duration",
@@ -185,13 +174,13 @@ def build_testing_dataset(
         fp for fp in df_prepared["audio_filepath"].unique() if fp.exists()
     ]
 
-    for audio_filepath in tqdm(audio_filepaths[0:1]):
+    for audio_filepath in tqdm(audio_filepaths):
         logging.info(f"audio_filepath: {audio_filepath}")
         output_audio_filepath_dir = output_dir / audio_filepath.stem
         output_audio_filepath_dir.mkdir(exist_ok=True, parents=True)
         df_audio_filemane = df_prepared[df_prepared["audio_filepath"] == audio_filepath]
         offsets = get_offsets(
-            df_audio_filemane,
+            df=df_audio_filemane,
             random_seed=random_seed,
             ratio_random=ratio_random_offsets,
         )
@@ -270,7 +259,7 @@ def build_training_dataset(
         df_metadata.to_csv(output_audio_filepath_dir / "metadata.csv")
 
         logging.info(f"number of offsets: {len(offsets)}")
-        for idx, offset in enumerate(tqdm(offsets)):
+        for idx, offset in enumerate(tqdm(offsets[:10])):
             filename = spectrogram_stem(audio_filepath, idx)
             generate_and_save_annotated_spectogram(
                 audio_filepath=audio_filepath,
@@ -293,6 +282,7 @@ if __name__ == "__main__":
     else:
         logging.info(args)
         output_dir = args["output_dir"]
+        logging.info(output_dir)
         output_dir.mkdir(exist_ok=True, parents=True)
         rumbles_dir = args["input_rumbles_dir"]
         test_dir = rumbles_dir / "Testing"
@@ -330,12 +320,12 @@ if __name__ == "__main__":
             ratio_random_offsets=ratio_random_offsets,
         )
         logging.info("Building the training dataset")
-        # build_training_dataset(
-        #     filepath_rumble_clearings=args["filepath_rumble_clearings"],
-        #     output_dir=args["output_dir"] / "training",
-        #     duration=args["duration"],
-        #     freq_min=args["freq_min"],
-        #     freq_max=args["freq_max"],
-        #     random_seed=args["random_seed"],
-        #     ratio_random_offsets=args["ratio_random_offsets"],
-        # )
+        build_training_dataset(
+            filepath_rumble_clearings=filepath_rumble_clearings,
+            output_dir=output_dir / "training",
+            duration=duration,
+            freq_min=freq_min,
+            freq_max=freq_max,
+            random_seed=random_seed,
+            ratio_random_offsets=ratio_random_offsets,
+        )
