@@ -200,7 +200,7 @@ def build_testing_dataset(
         logging.info(df_metadata.head())
         df_metadata.to_csv(output_audio_filepath_dir / "metadata.csv")
         logging.info(f"number of offsets: {len(offsets)}")
-        for idx, offset in enumerate(tqdm(offsets[:10])):
+        for idx, offset in enumerate(tqdm(offsets)):
             filename = spectrogram_stem(audio_filepath, idx)
             generate_and_save_annotated_spectogram(
                 audio_filepath=audio_filepath,
@@ -260,7 +260,7 @@ def build_training_dataset(
         df_metadata.to_csv(output_audio_filepath_dir / "metadata.csv")
 
         logging.info(f"number of offsets: {len(offsets)}")
-        for idx, offset in enumerate(tqdm(offsets[:10])):
+        for idx, offset in enumerate(tqdm(offsets)):
             filename = spectrogram_stem(audio_filepath, idx)
             generate_and_save_annotated_spectogram(
                 audio_filepath=audio_filepath,

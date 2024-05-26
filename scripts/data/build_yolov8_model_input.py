@@ -8,7 +8,7 @@ import shutil
 from pathlib import Path
 from typing import Tuple
 
-from tqdm import tqdm
+from forest_elephants_rumble_detection.utils import yaml_write
 
 
 def make_cli_parser() -> argparse.ArgumentParser:
@@ -31,6 +31,18 @@ def make_cli_parser() -> argparse.ArgumentParser:
         help="random seed",
         type=int,
         default=0,
+    )
+    parser.add_argument(
+        "--ratio",
+        help="ratio to sample from the original dataset",
+        type=float,
+        default=1.0,
+    )
+    parser.add_argument(
+        "--ratio-train-val",
+        help="train_val split ratio.",
+        type=float,
+        default=0.8,
     )
     parser.add_argument(
         "-log",
@@ -133,31 +145,6 @@ def make_model_input(
         shutil.copyfile(src=filepath, dst=output_test_labels_dir / filepath.name)
 
 
-# REPL
-# input_features = Path("./data/02_features/rumbles/spectrograms_test")
-# input_features.exists()
-
-# train_features = input_features / "training"
-# test_features = input_features / "testing"
-
-# train_images = list(train_features.rglob("*.png"))
-# test_images = list(test_features.rglob("*.png"))
-# train_images[:2]
-# test_images[:2]
-
-# ratio = 0.1
-
-# subdirs = [train_features / fn for fn in os.listdir(train_features)]
-# subdirs
-
-# random_seed = 42
-# subdir = subdirs[0]
-# spectrograms = list(subdir.glob("*.png"))
-# N = len(spectrograms)
-# k = int(ratio * N) + 1
-# sample = random.Random(random_seed).sample(spectrograms, k)
-
-
 def sample_spectrograms(
     input_dir: Path,
     ratio: float,
@@ -189,22 +176,15 @@ def get_annotation_filepaths(spectrograms: list[Path]) -> list[Path]:
     return result
 
 
-# spectrograms = sample_spectrograms(train_features, 0.2, 0)
-
-# annotations = get_annotation_filepaths(spectrograms)
-
-# output_dir = Path("./data/03_model_input/yolov8/")
-# output_train_dir = output_dir / "train"
-# output_train_images_dir = output_dir / "train" / "images"
-# output_train_labels_dir = output_dir / "train" / "labels"
-# output_train_images_dir.mkdir(exist_ok=True, parents=True)
-# output_train_labels_dir.mkdir(exist_ok=True, parents=True)
-
-# for filepath in spectrograms:
-#     shutil.copyfile(src=filepath, dst=output_train_images_dir / filepath.name)
-
-# for filepath in annotations:
-#     shutil.copyfile(src=filepath, dst=output_train_labels_dir / filepath.name)
+def write_data_yaml(yaml_filepath: Path) -> None:
+    content = {
+        "train": "./train/images",
+        "val": "./val/images",
+        "test": "./test/images",
+        "nc": 1,
+        "names": ["rumble"],
+    }
+    yaml_write(to=yaml_filepath, data=content)
 
 
 if __name__ == "__main__":
@@ -220,10 +200,21 @@ if __name__ == "__main__":
         output_dir.mkdir(exist_ok=True, parents=True)
         input_features = args["input_features"]
         random_seed = args["random_seed"]
+        ratio_train_val = args["ratio_train_val"]
+        ratio = args["ratio"]
+        yaml_write(
+            to=output_dir / "config.yaml",
+            data={
+                **args,
+                "output_dir": str(output_dir),
+                "input_features": str(input_features),
+            },
+        )
+        write_data_yaml(output_dir / "data.yaml")
         make_model_input(
             input_features=input_features,
             output_dir=output_dir,
-            ratio=0.1,
-            ratio_train_val=0.8,
+            ratio=ratio,
+            ratio_train_val=ratio_train_val,
             random_seed=random_seed,
         )

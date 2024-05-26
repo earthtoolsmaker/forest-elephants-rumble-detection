@@ -16,6 +16,7 @@ torchaudio = "^2.3.0"
 matplotlib = "^3.8.4"
 ipython = "^8.24.0"
 tqdm = "^4.66.4"
+ultralytics = "^8.2.22"
 
 
 [tool.poetry.group.dev.dependencies]
