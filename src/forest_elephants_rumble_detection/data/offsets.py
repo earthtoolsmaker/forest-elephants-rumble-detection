@@ -12,8 +12,11 @@ def get_random_offsets(n: int, df: pd.DataFrame, random_seed: int = 0) -> list[f
     """
     random.seed(random_seed)
     t_start_xs = list(df["t_start"].unique())
-    t0, tmax = min(*t_start_xs), max(*t_start_xs)
-    return [random.randrange(int(t0), int(tmax)) for _ in range(n)]
+    if len(t_start_xs) <= 1:
+        return []
+    else:
+        t0, tmax = min(*t_start_xs), max(*t_start_xs)
+        return [random.randrange(int(t0), int(tmax)) for _ in range(n)]
 
 
 def get_rumble_offsets(df: pd.DataFrame, epsilon: float = 1.5) -> list[float]:

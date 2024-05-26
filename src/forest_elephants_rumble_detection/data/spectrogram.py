@@ -58,7 +58,7 @@ def make_spectrogram(
         ax.set_axis_off()
         plt.margins(x=0)
 
-    # Release allocated memory to generate the spectrogram
+    # Release allocated memory to generate the spectrogram - if not released, a memory leak occurs.
     del color_mesh
 
     return fig
