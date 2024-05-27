@@ -87,30 +87,30 @@ stages:
     outs:
       - ./data/04_models/yolov8/best_full_dataset/
   # TODO: eval the baseline and the best models here instead of the dumb
-  # eval_yolov8_dumb_small_dataset:
-  #   cmd:
-  #     - >-
-  #       python ./scripts/model/yolov8/eval.py
-  #       --weights-filepath ./data/04_models/yolov8/dumb_small_dataset/weights/best.pt
-  #       --split "val"
-  #       --save-json true
-  #       --save-hybrid true
-  #       --output-dir ./data/06_reporting/yolov8/dumb_small_dataset/
-  #       --loglevel "info"
-  #     - >-
-  #       python ./scripts/model/yolov8/eval.py
-  #       --weights-filepath ./data/04_models/yolov8/dumb_small_dataset/weights/best.pt
-  #       --split "test"
-  #       --save-json true
-  #       --save-hybrid true
-  #       --output-dir ./data/06_reporting/yolov8/dumb_small_dataset/
-  #       --loglevel "info"
-  #   deps:
-  #     - ./scripts/model/yolov8/eval.py
-  #     - ./data/03_model_input/yolov8/full/
-  #     - ./data/04_models/yolov8/dumb_small_dataset/
-  #   outs:
-  #     - ./data/06_reporting/yolov8/dumb_small_dataset/
+  eval_yolov8_dumb_small_dataset:
+    cmd:
+      - >-
+        python ./scripts/model/yolov8/eval.py
+        --weights-filepath ./data/04_models/yolov8/dumb_small_dataset/weights/best.pt
+        --split "val"
+        --save-json true
+        --save-hybrid true
+        --output-dir ./data/06_reporting/yolov8/dumb_small_dataset/
+        --loglevel "info"
+      - >-
+        python ./scripts/model/yolov8/eval.py
+        --weights-filepath ./data/04_models/yolov8/dumb_small_dataset/weights/best.pt
+        --split "test"
+        --save-json true
+        --save-hybrid true
+        --output-dir ./data/06_reporting/yolov8/dumb_small_dataset/
+        --loglevel "info"
+    deps:
+      - ./scripts/model/yolov8/eval.py
+      - ./data/03_model_input/yolov8/full/
+      - ./data/04_models/yolov8/dumb_small_dataset/
+    outs:
+      - ./data/06_reporting/yolov8/dumb_small_dataset/
   eval_yolov8_baseline_small_dataset:
     cmd:
       - >-
