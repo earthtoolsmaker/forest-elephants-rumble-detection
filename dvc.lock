@@ -82,12 +82,12 @@ stages:
     deps:
     - path: ./data/03_model_input/yolov8/small/
       hash: md5
-      md5: b8936dc4afca0f0866a1dc64f4174b7d.dir
-      size: 1634256475
-      nfiles: 27754
+      md5: 7134cddcc6d458f73d6f93d473222856.dir
+      size: 1640315660
+      nfiles: 27755
     - path: ./scripts/model/yolov8/configs/baseline.yaml
       hash: md5
-      md5: 0b5b990277b581faf30cd897f1b17a7c
+      md5: 4949bd23b3b0046a4a0a4d77fcf49df1
       size: 45
     - path: ./scripts/model/yolov8/train.py
       hash: md5
@@ -96,6 +96,6 @@ stages:
     outs:
     - path: ./data/04_models/yolov8/baseline_small_dataset/
       hash: md5
-      md5: d4efcb3847dc738b26ae85edc28f3001.dir
-      size: 15119684
-      nfiles: 22
+      md5: ad73bb6be996448db808773da6cc8adb.dir
+      size: 16210803
+      nfiles: 25
