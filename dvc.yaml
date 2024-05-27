@@ -22,11 +22,12 @@ stages:
         python ./scripts/data/build_yolov8_model_input.py
         --input-features "./data/02_features/rumbles/spectrograms/"
         --output-dir "./data/03_model_input/yolov8/small/"
-        --ratio 0.1
+        --ratio 0.01
         --ratio-train-val 0.8
         --loglevel "info"
     deps:
       - ./scripts/data/build_yolov8_model_input.py
+      - ./data/02_features/rumbles/spectrograms/
     outs:
       - ./data/03_model_input/yolov8/small/
   build_yolov8_model_input_full:
@@ -40,5 +41,20 @@ stages:
         --loglevel "info"
     deps:
       - ./scripts/data/build_yolov8_model_input.py
+      - ./data/02_features/rumbles/spectrograms/
     outs:
       - ./data/03_model_input/yolov8/full/
+  train_yolov8_baseline_small_dataset:
+    cmd:
+      - >-
+        python ./scripts/model/yolov8/train.py
+        --data ./data/03_model_input/yolov8/small/data.yaml
+        --config ./scripts/model/yolov8/configs/baseline.yaml
+        --experiment-name baseline_small_dataset
+        --loglevel info
+    deps:
+      - ./scripts/model/yolov8/train.py
+      - ./scripts/model/yolov8/configs/baseline.yaml
+      - ./data/03_model_input/yolov8/small/
+    outs:
+      - ./data/04_models/yolov8/baseline_small_dataset/

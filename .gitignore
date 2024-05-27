@@ -3,3 +3,5 @@ data/02_features/rumbles/
 
 !.gitkeep
 __pycache__/
+runs/
+yolov8*.pt

@@ -36,8 +36,7 @@ def make_cli_parser() -> argparse.ArgumentParser:
         "--output-dir",
         help="path to save the generated spectrograms.",
         type=Path,
-        # FIXME
-        default=Path("./data/02_features/rumbles/spectrograms_test"),
+        default=Path("./data/02_features/rumbles/spectrograms/"),
     )
     parser.add_argument(
         "--duration",

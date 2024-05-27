@@ -2,19 +2,20 @@ schema: '2.0'
 stages:
   build_features:
     cmd:
-    - python ./scripts/data/make_spectograms.py --output-dir ./data/02_features/rumbles/spectrograms/
-      --loglevel "info"
+    - python ./scripts/data/build_features.py --input-rumbles-dir "./data/01_raw/cornell_data/Rumble/"
+      --output-dir "./data/02_features/rumbles/spectrograms/" --duration 60.0 --freq-min
+      0.0 --freq-max 250.0 --random-seed 0 --ratio-random-offsets 0.2 --loglevel "info"
     deps:
-    - path: ./scripts/data/make_spectograms.py
+    - path: ./scripts/data/build_features.py
       hash: md5
-      md5: 1460cc42d3715e3d057d5993447bec2b
-      size: 7679
+      md5: b41a43926a56a798e8e4a99cc110eee2
+      size: 11180
     outs:
     - path: ./data/02_features/rumbles/spectrograms/
       hash: md5
-      md5: ff09a5c5cf77d0eb6a5453de9a80b07a.dir
-      size: 3670839537
-      nfiles: 70650
+      md5: 0effb5a84252bdb19aeb583dfaf50640.dir
+      size: 5272834786
+      nfiles: 97768
   build_yolov8_model_input:
     cmd:
     - python ./scripts/data/build_yolov8_model_input.py --input-features "./data/02_features/rumbles/spectrograms_test/"
@@ -33,33 +34,68 @@ stages:
       nfiles: 501
   build_yolov8_model_input_small:
     cmd:
-    - python ./scripts/data/build_yolov8_model_input.py --input-features "./data/02_features/rumbles/spectrograms_test/"
-      --output-dir "./data/03_model_input/yolov8/small/" --ratio 0.1 --ratio-train-val
+    - python ./scripts/data/build_yolov8_model_input.py --input-features "./data/02_features/rumbles/spectrograms/"
+      --output-dir "./data/03_model_input/yolov8/small/" --ratio 0.01 --ratio-train-val
       0.8 --loglevel "info"
     deps:
+    - path: ./data/02_features/rumbles/spectrograms/
+      hash: md5
+      md5: 0effb5a84252bdb19aeb583dfaf50640.dir
+      size: 5272834786
+      nfiles: 97768
     - path: ./scripts/data/build_yolov8_model_input.py
       hash: md5
-      md5: 248bd3cab30793330b55449b5fb0e9d0
-      size: 8407
+      md5: e834f30dd62e9f59ad8d01759e019934
+      size: 7183
     outs:
     - path: ./data/03_model_input/yolov8/small/
       hash: md5
-      md5: 4d0078656f53508950e9b494bb40bcaf.dir
-      size: 36157575
-      nfiles: 502
+      md5: b8936dc4afca0f0866a1dc64f4174b7d.dir
+      size: 1634256475
+      nfiles: 27754
   build_yolov8_model_input_full:
     cmd:
-    - python ./scripts/data/build_yolov8_model_input.py --input-features "./data/02_features/rumbles/spectrograms_test/"
+    - python ./scripts/data/build_yolov8_model_input.py --input-features "./data/02_features/rumbles/spectrograms/"
       --output-dir "./data/03_model_input/yolov8/full/" --ratio 1.0 --ratio-train-val
       0.8 --loglevel "info"
     deps:
+    - path: ./data/02_features/rumbles/spectrograms/
+      hash: md5
+      md5: 0effb5a84252bdb19aeb583dfaf50640.dir
+      size: 5272834786
+      nfiles: 97768
     - path: ./scripts/data/build_yolov8_model_input.py
       hash: md5
-      md5: 248bd3cab30793330b55449b5fb0e9d0
-      size: 8407
+      md5: e834f30dd62e9f59ad8d01759e019934
+      size: 7183
     outs:
     - path: ./data/03_model_input/yolov8/full/
       hash: md5
-      md5: b99c0515b7850a4dbd9b0dbd3ac332be.dir
-      size: 84608559
-      nfiles: 1055
+      md5: f63660a057d5e5f6715720cb06cc77c4.dir
+      size: 5266101279
+      nfiles: 97679
+  train_yolov8_baseline_small_dataset:
+    cmd:
+    - python ./scripts/model/yolov8/train.py --data ./data/03_model_input/yolov8/small/data.yaml
+      --config ./scripts/model/yolov8/configs/baseline.yaml --experiment-name baseline_small_dataset
+      --loglevel info
+    deps:
+    - path: ./data/03_model_input/yolov8/small/
+      hash: md5
+      md5: b8936dc4afca0f0866a1dc64f4174b7d.dir
+      size: 1634256475
+      nfiles: 27754
+    - path: ./scripts/model/yolov8/configs/baseline.yaml
+      hash: md5
+      md5: 0b5b990277b581faf30cd897f1b17a7c
+      size: 45
+    - path: ./scripts/model/yolov8/train.py
+      hash: md5
+      md5: b45a7ef0cf0bdf08ea7b70482df7f96a
+      size: 2758
+    outs:
+    - path: ./data/04_models/yolov8/baseline_small_dataset/
+      hash: md5
+      md5: d4efcb3847dc738b26ae85edc28f3001.dir
+      size: 15119684
+      nfiles: 22

@@ -62,7 +62,7 @@ def validate_parsed_args(args: dict) -> bool:
         return True
 
 
-# FIXME: split by audio recordings
+# FIXME: split by audio recordings - the current implementation leads to train/val leakage
 def train_val_split(
     X: list[Path],
     split_ratio: float = 0.8,
@@ -177,6 +177,7 @@ def get_annotation_filepaths(spectrograms: list[Path]) -> list[Path]:
 
 
 def write_data_yaml(yaml_filepath: Path) -> None:
+    """Writes the data.yaml file used by the yolov8 model."""
     content = {
         "train": "./train/images",
         "val": "./val/images",
