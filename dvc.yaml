@@ -44,17 +44,126 @@ stages:
       - ./data/02_features/rumbles/spectrograms/
     outs:
       - ./data/03_model_input/yolov8/full/
-  # train_yolov8_baseline_small_dataset:
+  train_yolov8_baseline_small_dataset:
+    cmd:
+      - >-
+        python ./scripts/model/yolov8/train.py
+        --data ./data/03_model_input/yolov8/small/data.yaml
+        --config ./scripts/model/yolov8/configs/baseline.yaml
+        --experiment-name baseline_small_dataset
+        --loglevel info
+    deps:
+      - ./scripts/model/yolov8/train.py
+      - ./scripts/model/yolov8/configs/baseline.yaml
+      - ./data/03_model_input/yolov8/small/
+    outs:
+      - ./data/04_models/yolov8/baseline_small_dataset/
+  train_yolov8_baseline_full_dataset:
+    cmd:
+      - >-
+        python ./scripts/model/yolov8/train.py
+        --data ./data/03_model_input/yolov8/full/data.yaml
+        --config ./scripts/model/yolov8/configs/baseline.yaml
+        --experiment-name baseline_full_dataset
+        --loglevel info
+    deps:
+      - ./scripts/model/yolov8/train.py
+      - ./scripts/model/yolov8/configs/baseline.yaml
+      - ./data/03_model_input/yolov8/full/
+    outs:
+      - ./data/04_models/yolov8/baseline_full_dataset/
+  train_yolov8_best_full_dataset:
+    cmd:
+      - >-
+        python ./scripts/model/yolov8/train.py
+        --data ./data/03_model_input/yolov8/full/data.yaml
+        --config ./scripts/model/yolov8/configs/best.yaml
+        --experiment-name best_full_dataset
+        --loglevel info
+    deps:
+      - ./scripts/model/yolov8/train.py
+      - ./scripts/model/yolov8/configs/best.yaml
+      - ./data/03_model_input/yolov8/full/
+    outs:
+      - ./data/04_models/yolov8/best_full_dataset/
+  # TODO: eval the baseline and the best models here instead of the dumb
+  # eval_yolov8_dumb_small_dataset:
   #   cmd:
   #     - >-
-  #       python ./scripts/model/yolov8/train.py
-  #       --data ./data/03_model_input/yolov8/small/data.yaml
-  #       --config ./scripts/model/yolov8/configs/baseline.yaml
-  #       --experiment-name baseline_small_dataset
-  #       --loglevel info
+  #       python ./scripts/model/yolov8/eval.py
+  #       --weights-filepath ./data/04_models/yolov8/dumb_small_dataset/weights/best.pt
+  #       --split "val"
+  #       --output-dir ./data/06_reporting/yolov8/dumb_small_dataset/
+  #       --loglevel "info"
+  #     - >-
+  #       python ./scripts/model/yolov8/eval.py
+  #       --weights-filepath ./data/04_models/yolov8/dumb_small_dataset/weights/best.pt
+  #       --split "test"
+  #       --output-dir ./data/06_reporting/yolov8/dumb_small_dataset/
+  #       --loglevel "info"
   #   deps:
-  #     - ./scripts/model/yolov8/train.py
-  #     - ./scripts/model/yolov8/configs/baseline.yaml
-  #     - ./data/03_model_input/yolov8/small/
+  #     - ./scripts/model/yolov8/eval.py
+  #     - ./data/03_model_input/yolov8/full/
+  #     - ./data/04_models/yolov8/dumb_small_dataset/
   #   outs:
-  #     - ./data/04_models/yolov8/baseline_small_dataset/
+  #     - ./data/06_reporting/yolov8/dumb_small_dataset/
+  eval_yolov8_baseline_small_dataset:
+    cmd:
+      - >-
+        python ./scripts/model/yolov8/eval.py
+        --weights-filepath ./data/04_models/yolov8/baseline_small_dataset/weights/best.pt
+        --split "val"
+        --output-dir ./data/06_reporting/yolov8/baseline_small_dataset/
+        --loglevel "info"
+      - >-
+        python ./scripts/model/yolov8/eval.py
+        --weights-filepath ./data/04_models/yolov8/baseline_small_dataset/weights/best.pt
+        --split "test"
+        --output-dir ./data/06_reporting/yolov8/baseline_small_dataset/
+        --loglevel "info"
+    deps:
+      - ./scripts/model/yolov8/eval.py
+      - ./data/03_model_input/yolov8/small/
+      - ./data/04_models/yolov8/baseline_small_dataset/
+    outs:
+      - ./data/06_reporting/yolov8/baseline_small_dataset/
+  eval_yolov8_baseline_full_dataset:
+    cmd:
+      - >-
+        python ./scripts/model/yolov8/eval.py
+        --weights-filepath ./data/04_models/yolov8/baseline_full_dataset/weights/best.pt
+        --split "val"
+        --output-dir ./data/06_reporting/yolov8/baseline_full_dataset/
+        --loglevel "info"
+      - >-
+        python ./scripts/model/yolov8/eval.py
+        --weights-filepath ./data/04_models/yolov8/baseline_full_dataset/weights/best.pt
+        --split "test"
+        --output-dir ./data/06_reporting/yolov8/baseline_full_dataset/
+        --loglevel "info"
+    deps:
+      - ./scripts/model/yolov8/eval.py
+      - ./data/03_model_input/yolov8/full/
+      - ./data/04_models/yolov8/baseline_full_dataset/
+    outs:
+      - ./data/06_reporting/yolov8/baseline_full_dataset/
+  eval_yolov8_best_full_dataset:
+    cmd:
+      - >-
+        python ./scripts/model/yolov8/eval.py
+        --weights-filepath ./data/04_models/yolov8/best_full_dataset/weights/best.pt
+        --split "val"
+        --output-dir ./data/06_reporting/yolov8/best_full_dataset/
+        --loglevel "info"
+      - >-
+        python ./scripts/model/yolov8/eval.py
+        --weights-filepath ./data/04_models/yolov8/best_full_dataset/weights/best.pt
+        --split "test"
+        --output-dir ./data/06_reporting/yolov8/best_full_dataset/
+        --loglevel "info"
+    deps:
+      - ./scripts/model/yolov8/eval.py
+      - ./data/03_model_input/yolov8/full/
+      - ./data/04_models/yolov8/best_full_dataset/
+    outs:
+      - ./data/06_reporting/yolov8/best_full_dataset/

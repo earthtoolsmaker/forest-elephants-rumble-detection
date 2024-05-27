@@ -99,3 +99,32 @@ stages:
       md5: ad73bb6be996448db808773da6cc8adb.dir
       size: 16210803
       nfiles: 25
+  eval_yolov8_dumb_small_dataset:
+    cmd:
+    - python ./scripts/model/yolov8/eval.py --weights-filepath ./data/04_models/yolov8/dumb_small_dataset/weights/best.pt
+      --split "val" --output-dir ./data/06_reporting/yolov8/dumb_small_dataset/ --loglevel
+      "info"
+    - python ./scripts/model/yolov8/eval.py --weights-filepath ./data/04_models/yolov8/dumb_small_dataset/weights/best.pt
+      --split "test" --output-dir ./data/06_reporting/yolov8/dumb_small_dataset/ --loglevel
+      "info"
+    deps:
+    - path: ./data/03_model_input/yolov8/full/
+      hash: md5
+      md5: 62c8f1da3ea443e258370b8d51e267e4.dir
+      size: 5266101279
+      nfiles: 97679
+    - path: ./data/04_models/yolov8/dumb_small_dataset/
+      hash: md5
+      md5: c86788cd64cc7a928ae796f7339c6dde.dir
+      size: 15207678
+      nfiles: 22
+    - path: ./scripts/model/yolov8/eval.py
+      hash: md5
+      md5: 568724b4263385f29f74c786b9e9503d
+      size: 2594
+    outs:
+    - path: ./data/06_reporting/yolov8/dumb_small_dataset/
+      hash: md5
+      md5: 52d95bd2a3900a33181c5625b484dc10.dir
+      size: 2866185
+      nfiles: 28

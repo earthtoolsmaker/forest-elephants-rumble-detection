@@ -6,13 +6,11 @@ import logging
 import shutil
 from pathlib import Path
 
-from ultralytics import settings
-
 from forest_elephants_rumble_detection.model.yolo.eval import (
     evaluate,
     load_trained_model,
 )
-from forest_elephants_rumble_detection.utils import yaml_read, yaml_write
+from forest_elephants_rumble_detection.utils import write_json, yaml_read, yaml_write
 
 
 def make_cli_parser() -> argparse.ArgumentParser:
@@ -50,6 +48,9 @@ def validate_parsed_args(args: dict) -> bool:
     if not args["weights_filepath"].exists():
         logging.error("Invalid --weights-filepath filepath does not exist")
         return False
+    elif not args["split"] in ["train", "val", "test"]:
+        logging.error("Invalid --split value, should be in {train, val, test}")
+        return False
     else:
         return True
 
@@ -66,8 +67,11 @@ if __name__ == "__main__":
         logging.info(f"Loading model from: {args['weights_filepath']}")
         model = load_trained_model(args["weights_filepath"])
         model.info()
-        # TODO: persist the report in the right output_dir
         results = evaluate(model, split=args["split"])
-        # TODO: do something with the result
         logging.info(results)
-        output_dir = args["output_dir"]
+        output_dir = args["output_dir"] / args["split"]
+        logging.info(f"output_dir: {output_dir}")
+        output_dir.mkdir(exist_ok=True, parents=True)
+        write_json(to=output_dir / "results.json", data=results.results_dict)
+        write_json(to=output_dir / "speed.json", data=results.speed)
+        shutil.copytree(src=results.save_dir, dst=output_dir / "artifacts")

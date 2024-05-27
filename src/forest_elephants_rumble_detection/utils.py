@@ -1,3 +1,4 @@
+import json
 from pathlib import Path
 
 import yaml
@@ -26,3 +27,8 @@ def yaml_write(to: Path, data: dict, dumper=MyDumper) -> None:
             default_flow_style=False,
             sort_keys=False,
         )
+
+
+def write_json(to: Path, data: dict) -> None:
+    with open(to, "w") as fp:
+        json.dump(data, fp)
