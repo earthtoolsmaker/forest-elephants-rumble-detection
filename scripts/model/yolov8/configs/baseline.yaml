@@ -1,4 +1,4 @@
 ---
-epochs: 30
+epochs: 1
 imgsz: 640
 model_type: yolov8n.pt

@@ -10,7 +10,7 @@ from forest_elephants_rumble_detection.model.yolo.eval import (
     evaluate,
     load_trained_model,
 )
-from forest_elephants_rumble_detection.utils import write_json, yaml_read, yaml_write
+from forest_elephants_rumble_detection.utils import write_json
 
 
 def make_cli_parser() -> argparse.ArgumentParser:
@@ -27,6 +27,18 @@ def make_cli_parser() -> argparse.ArgumentParser:
         help="value in {train, val, test}",
         default="test",
         type=str,
+    )
+    parser.add_argument(
+        "--save-json",
+        help="Persist the predictions data",
+        default=False,
+        type=bool,
+    )
+    parser.add_argument(
+        "--save-hybrid",
+        help="Persist the predictions and ground truth image data",
+        default=False,
+        type=bool,
     )
     parser.add_argument(
         "--output-dir",
@@ -48,7 +60,7 @@ def validate_parsed_args(args: dict) -> bool:
     if not args["weights_filepath"].exists():
         logging.error("Invalid --weights-filepath filepath does not exist")
         return False
-    elif not args["split"] in ["train", "val", "test"]:
+    elif args["split"] not in ["train", "val", "test"]:
         logging.error("Invalid --split value, should be in {train, val, test}")
         return False
     else:
@@ -67,7 +79,12 @@ if __name__ == "__main__":
         logging.info(f"Loading model from: {args['weights_filepath']}")
         model = load_trained_model(args["weights_filepath"])
         model.info()
-        results = evaluate(model, split=args["split"])
+        results = evaluate(
+            model,
+            split=args["split"],
+            save_json=args["save_json"],
+            save_hybrid=args["save_hybrid"],
+        )
         logging.info(results)
         output_dir = args["output_dir"] / args["split"]
         logging.info(f"output_dir: {output_dir}")

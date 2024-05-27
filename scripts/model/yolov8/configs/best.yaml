@@ -1,7 +1,5 @@
 ---
-epochs: 200
+epochs: 30
 patience: 100
 imgsz: 640
 model_type: yolov8n.pt
-mixup: 0.2
-translate: 0.5

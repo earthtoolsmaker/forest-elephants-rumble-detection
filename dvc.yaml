@@ -93,12 +93,16 @@ stages:
   #       python ./scripts/model/yolov8/eval.py
   #       --weights-filepath ./data/04_models/yolov8/dumb_small_dataset/weights/best.pt
   #       --split "val"
+  #       --save-json true
+  #       --save-hybrid true
   #       --output-dir ./data/06_reporting/yolov8/dumb_small_dataset/
   #       --loglevel "info"
   #     - >-
   #       python ./scripts/model/yolov8/eval.py
   #       --weights-filepath ./data/04_models/yolov8/dumb_small_dataset/weights/best.pt
   #       --split "test"
+  #       --save-json true
+  #       --save-hybrid true
   #       --output-dir ./data/06_reporting/yolov8/dumb_small_dataset/
   #       --loglevel "info"
   #   deps:
