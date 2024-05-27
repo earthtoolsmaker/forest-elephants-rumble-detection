@@ -1,0 +1,7 @@
+---
+epochs: 200
+patience: 100
+imgsz: 640
+model_type: yolov8n.pt
+mixup: 0.2
+translate: 0.5

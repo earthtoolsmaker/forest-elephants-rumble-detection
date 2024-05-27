@@ -45,14 +45,14 @@ stages:
       nfiles: 97768
     - path: ./scripts/data/build_yolov8_model_input.py
       hash: md5
-      md5: e834f30dd62e9f59ad8d01759e019934
-      size: 7183
+      md5: ae03cc8a9dd67b7a5e4c8970cbb11f2a
+      size: 9069
     outs:
     - path: ./data/03_model_input/yolov8/small/
       hash: md5
-      md5: 7134cddcc6d458f73d6f93d473222856.dir
-      size: 1640315660
-      nfiles: 27755
+      md5: 42454cc6927afa202af3ccd18ca5cda1.dir
+      size: 1636613822
+      nfiles: 27796
   build_yolov8_model_input_full:
     cmd:
     - python ./scripts/data/build_yolov8_model_input.py --input-features "./data/02_features/rumbles/spectrograms/"
@@ -66,12 +66,12 @@ stages:
       nfiles: 97768
     - path: ./scripts/data/build_yolov8_model_input.py
       hash: md5
-      md5: e834f30dd62e9f59ad8d01759e019934
-      size: 7183
+      md5: ae03cc8a9dd67b7a5e4c8970cbb11f2a
+      size: 9069
     outs:
     - path: ./data/03_model_input/yolov8/full/
       hash: md5
-      md5: f63660a057d5e5f6715720cb06cc77c4.dir
+      md5: 62c8f1da3ea443e258370b8d51e267e4.dir
       size: 5266101279
       nfiles: 97679
   train_yolov8_baseline_small_dataset:

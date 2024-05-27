@@ -8,6 +8,8 @@ import shutil
 from pathlib import Path
 from typing import Tuple
 
+import pandas as pd
+
 from forest_elephants_rumble_detection.utils import yaml_write
 
 
@@ -62,18 +64,59 @@ def validate_parsed_args(args: dict) -> bool:
         return True
 
 
-# FIXME: split by audio recordings - the current implementation leads to train/val leakage
-def train_val_split(
-    X: list[Path],
+def get_metadata_df(split_features_dir: Path) -> pd.DataFrame:
+    """Returns a dataframe that contains all concatenated metadata.csv file for
+    a split_features_dir.
+
+    It also adds the following columns:
+    - subdir: str - name of the subdir
+    - spectrogram_filepath: Path
+    - annotation_filepath: Path - can be None if there is no rumbles
+    """
+    subdirs = os.listdir(split_features_dir)
+    xs = []
+    for subdir in subdirs:
+        filepath_metadata = split_features_dir / subdir / "metadata.csv"
+        df_metadata = pd.read_csv(filepath_metadata)
+        df_metadata["subdir"] = subdir
+        df_metadata["spectrogram_filepath"] = df_metadata["filename_stem"].map(
+            lambda stem: filepath_metadata.parent / f"{stem}.png"
+        )
+        df_metadata["annotation_filepath"] = df_metadata["filename_stem"].map(
+            lambda stem: (
+                filepath_metadata.parent / f"{stem}.txt"
+                if (filepath_metadata.parent / f"{stem}.txt").exists()
+                else None
+            )
+        )
+        xs.append(df_metadata)
+    return pd.concat(xs)
+
+
+def train_val_increasing_offsets_split(
+    train_features_dir: Path,
     split_ratio: float = 0.8,
-    random_seed: int = 0,
 ) -> Tuple[list[Path], list[Path]]:
-    """Splits the list of spectrograms filepaths into train and val."""
-    X_copy = X.copy()
-    random.Random(random_seed).shuffle(X_copy)
-    N = len(X)
-    n_train = int(split_ratio * N)
-    return X_copy[0:n_train], X_copy[n_train:]
+    """Splits the list of spectrograms filepaths into train and val.
+
+    Prevent data leakage by splitting by increasing offsets. It is an
+    entirely deterministic function.
+    """
+    subdirs = os.listdir(train_features_dir)
+    df_metadata = get_metadata_df(train_features_dir)
+    logging.info(df_metadata.info())
+
+    X_train, X_val = [], []
+    for subdir in subdirs:
+        df_subdir_metadata = df_metadata[df_metadata["subdir"] == subdir].sort_values(
+            by="offset"
+        )
+        N = len(df_subdir_metadata)
+        k = int(N * split_ratio)
+        X_train.extend(df_subdir_metadata["spectrogram_filepath"][:k].tolist())
+        X_val.extend(df_subdir_metadata["spectrogram_filepath"][k:].tolist())
+
+    return (X_train, X_val)
 
 
 def make_model_input(
@@ -83,19 +126,24 @@ def make_model_input(
     ratio_train_val: float = 0.8,
     random_seed: int = 0,
 ) -> None:
+    """Main entry point to organize spectrograms and annotations into a yolov8
+    compatible structure and format."""
+    assert 0.0 <= ratio <= 1.0, "ratio should be between 0 and 1"
     train_features = input_features / "training"
     test_features = input_features / "testing"
 
-    train_and_val_spectrograms = sample_spectrograms(
-        input_dir=train_features,
-        ratio=ratio,
-        random_seed=random_seed,
-    )
-    train_spectrograms, val_spectrograms = train_val_split(
-        train_and_val_spectrograms,
+    train_spectrograms_full, val_spectrograms_full = train_val_increasing_offsets_split(
+        train_features_dir=train_features,
         split_ratio=ratio_train_val,
-        random_seed=random_seed,
     )
+    N = len(train_spectrograms_full)
+    k = int(ratio * N)
+    train_spectrograms = random.Random(random_seed).sample(train_spectrograms_full, k)
+
+    N = len(val_spectrograms_full)
+    k = int(ratio * N)
+    val_spectrograms = random.Random(random_seed).sample(val_spectrograms_full, k)
+
     test_spectrograms = sample_spectrograms(
         input_dir=test_features,
         ratio=1.0,

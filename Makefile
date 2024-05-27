@@ -21,6 +21,13 @@ train_baseline_full:
           --experiment-name baseline_full_dataset \
           --loglevel "info"
 
+train_best_full:
+	python ./scripts/model/yolov8/train.py \
+          --data ./data/03_model_input/yolov8/full/data.yaml \
+          --config ./scripts/model/yolov8/configs/best.yaml \
+          --experiment-name best_full_dataset \
+          --loglevel "info"
+
 eval_val:
 	python ./scripts/model/yolov8/eval.py \
 	  --weights-filepath ./data/04_models/yolov8/baseline_small_dataset/weights/best.pt \
