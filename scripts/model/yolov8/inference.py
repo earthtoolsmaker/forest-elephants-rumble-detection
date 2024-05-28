@@ -80,6 +80,8 @@ def validate_parsed_args(args: dict) -> bool:
 
 
 def draw_yolov8_bbox_from(ax, bbox, width_pixels: int, height_pixels: int) -> None:
+    """Draws a YOLOv8 bbox onto ax, rescaling it by the provided width_pixels
+    and height_pixels values."""
     x = (bbox["center_x"] - bbox["width"] / 2) * width_pixels
     y = (bbox["center_y"] - bbox["height"] / 2) * height_pixels
     width = bbox["width"] * width_pixels
@@ -102,6 +104,12 @@ def save_detailed_prediction(
     image_filepath: Path,
     label_filepath: Path,
 ) -> None:
+    """Saves predictions made with the provided YOLO model on the
+    image_filepath alongside its ground truth.
+
+    It makes it possible to quickly evaluate the model from a
+    qualitative point of view.
+    """
     predictions = model.predict(image_filepath)
     bboxes_predictions = []
     if predictions:
@@ -137,6 +145,7 @@ def save_detailed_prediction(
         draw_yolov8_bbox_from(ax=axis[2], bbox=bbox, width_pixels=W, height_pixels=H)
 
     output_filepath = output_dir / image_filepath.name
+
     plt.savefig(output_filepath, bbox_inches="tight")
     plt.close("all")
 
