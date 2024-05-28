@@ -16,6 +16,21 @@ stages:
       - ./scripts/data/build_features.py
     outs:
       - ./data/02_features/rumbles/spectrograms/
+  build_yolov8_model_input_testing_features_only:
+    cmd:
+      - >-
+        python ./scripts/data/build_yolov8_model_input.py
+        --input-features "./data/02_features/rumbles/spectrograms/"
+        --testing-features-only true
+        --output-dir "./data/03_model_input/yolov8/testing_features_only_full/"
+        --ratio 1.0
+        --ratio-train-val 0.8
+        --loglevel "info"
+    deps:
+      - ./scripts/data/build_yolov8_model_input.py
+      - ./data/02_features/rumbles/spectrograms/
+    outs:
+      - ./data/03_model_input/yolov8/testing_features_only_full/
   build_yolov8_model_input_small:
     cmd:
       - >-
@@ -86,6 +101,20 @@ stages:
       - ./data/03_model_input/yolov8/full/
     outs:
       - ./data/04_models/yolov8/best_full_dataset/
+  train_yolov8_best_testing_features_only_full_dataset:
+    cmd:
+      - >-
+        python ./scripts/model/yolov8/train.py
+        --data ./data/03_model_input/yolov8/testing_features_only_full/data.yaml
+        --config ./scripts/model/yolov8/configs/best.yaml
+        --experiment-name best_testing_only_features_full_dataset
+        --loglevel info
+    deps:
+      - ./scripts/model/yolov8/train.py
+      - ./scripts/model/yolov8/configs/best.yaml
+      - ./data/03_model_input/yolov8/testing_features_only_full/
+    outs:
+      - ./data/04_models/yolov8/best_testing_only_features_full_dataset/
   # TODO: eval the baseline and the best models here instead of the dumb
   eval_yolov8_dumb_small_dataset:
     cmd:
@@ -171,6 +200,67 @@ stages:
       - ./data/04_models/yolov8/best_full_dataset/
     outs:
       - ./data/06_reporting/yolov8/best_full_dataset/
+  eval_yolov8_best_testing_features_only_full_dataset:
+    cmd:
+      - >-
+        python ./scripts/model/yolov8/eval.py
+        --weights-filepath ./data/04_models/yolov8/best_testing_only_features_full_dataset/weights/best.pt
+        --split "val"
+        --output-dir ./data/06_reporting/yolov8/best_testing_only_features_full_dataset/
+        --loglevel "info"
+      - >-
+        python ./scripts/model/yolov8/eval.py
+        --weights-filepath ./data/04_models/yolov8/best_testing_only_features_full_dataset/weights/best.pt
+        --split "test"
+        --output-dir ./data/06_reporting/yolov8/best_testing_only_features_full_dataset/
+        --loglevel "info"
+      - >-
+        python ./scripts/model/yolov8/eval.py
+        --weights-filepath ./data/04_models/yolov8/best_testing_only_features_full_dataset/weights/best.pt
+        --split "train"
+        --output-dir ./data/06_reporting/yolov8/best_testing_only_features_full_dataset/
+        --loglevel "info"
+    deps:
+      - ./scripts/model/yolov8/eval.py
+      - ./data/03_model_input/yolov8/testing_features_only_full/
+      - ./data/04_models/yolov8/best_testing_only_features_full_dataset/
+    outs:
+      - ./data/06_reporting/yolov8/best_testing_only_features_full_dataset/
+  inference_yolov8_best_testing_only_features_full_dataset:
+    cmd:
+      - >-
+        python ./scripts/model/yolov8/inference.py
+        --input-dir-yolov8-dataset ./data/03_model_input/yolov8/testing_features_only_full/
+        --output-dir ./data/05_model_output/yolov8/best_testing_only_features_full_dataset/
+        --weights-filepath ./data/04_models/yolov8/best_testing_only_features_full_dataset/weights/best.pt
+        --split "test"
+        --k 25
+        --random-seed 0
+        --loglevel "info"
+      - >-
+        python ./scripts/model/yolov8/inference.py
+        --input-dir-yolov8-dataset ./data/03_model_input/yolov8/testing_features_only_full/
+        --output-dir ./data/05_model_output/yolov8/best_testing_only_features_full_dataset/
+        --weights-filepath ./data/04_models/yolov8/best_testing_only_features_full_dataset/weights/best.pt
+        --split "val"
+        --k 25
+        --random-seed 0
+        --loglevel "info"
+      - >-
+        python ./scripts/model/yolov8/inference.py
+        --input-dir-yolov8-dataset ./data/03_model_input/yolov8/testing_features_only_full/
+        --output-dir ./data/05_model_output/yolov8/best_testing_only_features_full_dataset/
+        --weights-filepath ./data/04_models/yolov8/best_testing_only_features_full_dataset/weights/best.pt
+        --split "train"
+        --k 25
+        --random-seed 0
+        --loglevel "info"
+    deps:
+      - ./scripts/model/yolov8/inference.py
+      - ./data/03_model_input/yolov8/testing_features_only_full/
+      - ./data/04_models/yolov8/best_testing_only_features_full_dataset/
+    outs:
+      - ./data/05_model_output/yolov8/best_testing_only_features_full_dataset/
   inference_yolov8_best_full_dataset:
     cmd:
       - >-

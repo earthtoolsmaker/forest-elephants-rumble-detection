@@ -163,3 +163,24 @@ stages:
       md5: 71c6ddc65f179655d488207a2404b6c4.dir
       size: 14036219
       nfiles: 75
+  build_yolov8_model_input_testing_features_only:
+    cmd:
+    - python ./scripts/data/build_yolov8_model_input.py --input-features "./data/02_features/rumbles/spectrograms/"
+      --testing-features-only true --output-dir "./data/03_model_input/yolov8/testing_features_only_full/"
+      --ratio 1.0 --ratio-train-val 0.8 --loglevel "info"
+    deps:
+    - path: ./data/02_features/rumbles/spectrograms/
+      hash: md5
+      md5: 0effb5a84252bdb19aeb583dfaf50640.dir
+      size: 5272834786
+      nfiles: 97768
+    - path: ./scripts/data/build_yolov8_model_input.py
+      hash: md5
+      md5: d25150e6ea77a4deedc2ae98ef5e61d5
+      size: 16220
+    outs:
+    - path: ./data/03_model_input/yolov8/testing_features_only_full/
+      hash: md5
+      md5: 617ca242c57122d8ab22bb2349c0186e.dir
+      size: 1600071761
+      nfiles: 27086
