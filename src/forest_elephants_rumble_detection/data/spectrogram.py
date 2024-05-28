@@ -130,7 +130,7 @@ def draw_yolov8_bbox(
     freq_min: float = 0.0,
     freq_max: float = 250.0,
 ) -> None:
-    """Adds a rectangle patch onto ax, which usually contains the spectogram.
+    """Adds a rectangle patch onto ax, which usually contains the spectrogram.
 
     specs: https://roboflow.com/formats/yolov8-pytorch-txt
     """

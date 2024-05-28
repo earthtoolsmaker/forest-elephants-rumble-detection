@@ -62,3 +62,13 @@ eval_test:
           --split "test" \
           --output-dir ./data/05_model_output/yolov8/baseline_small_dataset/ \
           --loglevel "info"
+
+
+inference_best:
+	python ./scripts/model/yolov8/inference.py \
+          --input-dir-yolov8-dataset ./data/03_model_input/yolov8/full/ \
+          --output-dir ./data/05_model_output/yolov8/best_full_dataset/ \
+          --split "test" \
+          --k 25 \
+          --random-seed 0 \
+          --loglevel "info"

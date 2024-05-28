@@ -125,6 +125,41 @@ stages:
     outs:
     - path: ./data/06_reporting/yolov8/dumb_small_dataset/
       hash: md5
-      md5: 42f7ed4e52edf56d28961caffa92e7ed.dir
-      size: 206142528
+      md5: bbc0440f471e3a0c91dfea8dd06e15cf.dir
+      size: 206142531
       nfiles: 30
+  inference_yolov8_best_full_dataset:
+    cmd:
+    - python ./scripts/model/yolov8/inference.py --input-dir-yolov8-dataset ./data/03_model_input/yolov8/full/
+      --output-dir ./data/05_model_output/yolov8/best_full_dataset/ --weights-filepath
+      ./data/04_models/yolov8/best_full_dataset/weights/best.pt --split "test" --k
+      25 --random-seed 0 --loglevel "info"
+    - python ./scripts/model/yolov8/inference.py --input-dir-yolov8-dataset ./data/03_model_input/yolov8/full/
+      --output-dir ./data/05_model_output/yolov8/best_full_dataset/ --weights-filepath
+      ./data/04_models/yolov8/best_full_dataset/weights/best.pt --split "val" --k
+      25 --random-seed 0 --loglevel "info"
+    - python ./scripts/model/yolov8/inference.py --input-dir-yolov8-dataset ./data/03_model_input/yolov8/full/
+      --output-dir ./data/05_model_output/yolov8/best_full_dataset/ --weights-filepath
+      ./data/04_models/yolov8/best_full_dataset/weights/best.pt --split "train" --k
+      25 --random-seed 0 --loglevel "info"
+    deps:
+    - path: ./data/03_model_input/yolov8/full/
+      hash: md5
+      md5: 62c8f1da3ea443e258370b8d51e267e4.dir
+      size: 5266101279
+      nfiles: 97679
+    - path: ./data/04_models/yolov8/best_full_dataset/
+      hash: md5
+      md5: 89ea5343dbab6e60396b61bfa767bf6e.dir
+      size: 20970669
+      nfiles: 50
+    - path: ./scripts/model/yolov8/inference.py
+      hash: md5
+      md5: b8bf5071ca2e13467eab758e64081bc6
+      size: 6182
+    outs:
+    - path: ./data/05_model_output/yolov8/best_full_dataset/
+      hash: md5
+      md5: 71c6ddc65f179655d488207a2404b6c4.dir
+      size: 14036219
+      nfiles: 75

@@ -18,7 +18,7 @@ def train(
     """Main function for running a train run."""
     assert data_yaml_path.exists(), f"data_yaml_path does not exist, {data_yaml_path}"
     default_params = {
-        "batch": 64,
+        "batch": 16,
         "epochs": 10,
         "patience": 100,
         "imgsz": 640,
@@ -26,11 +26,14 @@ def train(
         "lrf": 0.01,
         "optimizer": "auto",
         # data augmentation
-        "hsv_h": 0.0,
-        "hsv_s": 0.0,
-        "hsv_v": 0.0,
+        # "hsv_h": 0.0,
+        # "hsv_s": 0.0,
+        # "hsv_v": 0.0,
+        "hsv_h": 0.015,
+        "hsv_s": 0.7,
+        "hsv_v": 0.4,
+        "mixup": 0.5,
         "scale": 0.0,
-        "mixup": 0.0,
         "close_mosaic": 10,
         "degrees": 0.0,
         "translate": 0.1,
@@ -43,6 +46,7 @@ def train(
         name=experiment_name,
         data=data_yaml_path.absolute(),
         # data=data_yaml_path,
+        batch=params["batch"],
         epochs=params["epochs"],
         lr0=params["lr0"],
         lrf=params["lrf"],

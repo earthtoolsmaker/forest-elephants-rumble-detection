@@ -171,3 +171,73 @@ stages:
       - ./data/04_models/yolov8/best_full_dataset/
     outs:
       - ./data/06_reporting/yolov8/best_full_dataset/
+  inference_yolov8_best_full_dataset:
+    cmd:
+      - >-
+        python ./scripts/model/yolov8/inference.py
+        --input-dir-yolov8-dataset ./data/03_model_input/yolov8/full/
+        --output-dir ./data/05_model_output/yolov8/best_full_dataset/
+        --weights-filepath ./data/04_models/yolov8/best_full_dataset/weights/best.pt
+        --split "test"
+        --k 25
+        --random-seed 0
+        --loglevel "info"
+      - >-
+        python ./scripts/model/yolov8/inference.py
+        --input-dir-yolov8-dataset ./data/03_model_input/yolov8/full/
+        --output-dir ./data/05_model_output/yolov8/best_full_dataset/
+        --weights-filepath ./data/04_models/yolov8/best_full_dataset/weights/best.pt
+        --split "val"
+        --k 25
+        --random-seed 0
+        --loglevel "info"
+      - >-
+        python ./scripts/model/yolov8/inference.py
+        --input-dir-yolov8-dataset ./data/03_model_input/yolov8/full/
+        --output-dir ./data/05_model_output/yolov8/best_full_dataset/
+        --weights-filepath ./data/04_models/yolov8/best_full_dataset/weights/best.pt
+        --split "train"
+        --k 25
+        --random-seed 0
+        --loglevel "info"
+    deps:
+      - ./scripts/model/yolov8/inference.py
+      - ./data/03_model_input/yolov8/full/
+      - ./data/04_models/yolov8/best_full_dataset/
+    outs:
+      - ./data/05_model_output/yolov8/best_full_dataset/
+  inference_yolov8_baseline_full_dataset:
+    cmd:
+      - >-
+        python ./scripts/model/yolov8/inference.py
+        --input-dir-yolov8-dataset ./data/03_model_input/yolov8/full/
+        --output-dir ./data/05_model_output/yolov8/baseline_full_dataset/
+        --weights-filepath ./data/04_models/yolov8/baseline_full_dataset/weights/best.pt
+        --split "test"
+        --k 25
+        --random-seed 0
+        --loglevel "info"
+      - >-
+        python ./scripts/model/yolov8/inference.py
+        --input-dir-yolov8-dataset ./data/03_model_input/yolov8/full/
+        --output-dir ./data/05_model_output/yolov8/baseline_full_dataset/
+        --weights-filepath ./data/04_models/yolov8/baseline_full_dataset/weights/best.pt
+        --split "val"
+        --k 25
+        --random-seed 0
+        --loglevel "info"
+      - >-
+        python ./scripts/model/yolov8/inference.py
+        --input-dir-yolov8-dataset ./data/03_model_input/yolov8/full/
+        --output-dir ./data/05_model_output/yolov8/baseline_full_dataset/
+        --weights-filepath ./data/04_models/yolov8/baseline_full_dataset/weights/best.pt
+        --split "train"
+        --k 25
+        --random-seed 0
+        --loglevel "info"
+    deps:
+      - ./scripts/model/yolov8/inference.py
+      - ./data/03_model_input/yolov8/full/
+      - ./data/04_models/yolov8/baseline_full_dataset/
+    outs:
+      - ./data/05_model_output/yolov8/baseline_full_dataset/
