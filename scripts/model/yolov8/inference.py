@@ -107,7 +107,7 @@ def save_detailed_prediction(
     if predictions:
         bboxes_predictions = [
             {"center_x": x[0], "center_y": x[1], "width": x[2], "height": x[3]}
-            for x in predictions[0].boxes.xywhn.numpy()
+            for x in predictions[0].boxes.xywhn.cpu().numpy()
         ]
     fig, axis = plt.subplots(3)
     fig.suptitle(f"Spectogram - duration: 60s")
