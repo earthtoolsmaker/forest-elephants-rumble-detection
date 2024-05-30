@@ -64,6 +64,53 @@ def make_spectrogram(
     return fig
 
 
+def make_spectrogram2(
+    audio,
+    sr: float,
+    n_fft: float,
+    top_db: float,
+    fmin: float,
+    fmax: float,
+    dpi: int,
+    hop_length: int,
+    width: int,
+    height: int,
+):
+
+    # Compute the Short-Time Fourier Transform (STFT)
+    D = librosa.stft(audio, n_fft=n_fft, hop_length=hop_length)
+
+    # Convert the amplitude to decibels
+    S_DB = librosa.amplitude_to_db(np.abs(D), ref=np.max, top_db=top_db)
+
+    # Matplotlib specific: by default it counts some inches for the padding -
+    # we subtract it to match our target width and height
+    pad_inches = 0.31
+    fig = plt.figure(
+        figsize=(width / dpi + pad_inches, height / dpi + pad_inches),
+        dpi=dpi,
+    )
+    fig.tight_layout()
+    color_mesh = librosa.display.specshow(
+        S_DB,
+        sr=sr,
+        x_axis="time",
+        y_axis="log",
+        n_fft=n_fft,
+    )
+    ax = fig.get_axes()[0]
+    # Raw spectrogram data without labels or axis
+    plt.ylim(fmin, fmax)
+    plt.axis("off")
+    ax.set_axis_off()
+    plt.margins(x=0)
+
+    # Prevents memory leakage
+    del color_mesh
+
+    return fig
+
+
 def select_rumbles_at(df: pd.DataFrame, offset: float, duration: float) -> pd.DataFrame:
     """Filters our rows in the dataframe `df` that are outside the offset and
     duration range.
