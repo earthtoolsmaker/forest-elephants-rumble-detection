@@ -3,6 +3,8 @@ raven pro txt files containing the annotated rumbles."""
 
 import argparse
 import logging
+import multiprocessing
+import os
 from pathlib import Path
 
 import matplotlib
@@ -85,6 +87,11 @@ def validate_parsed_args(args: dict) -> bool:
         return False
     else:
         return True
+
+
+def spectrogram_stem(audio_filepath: Path, index: int) -> str:
+    """Returns the stem for the file where the spectrogram is saved."""
+    return f"{audio_filepath.stem}_spectrogram_{index}"
 
 
 def generate_and_save_annotated_spectogram2(
@@ -207,9 +214,128 @@ def generate_and_save_annotated_spectogram(
     del audio
 
 
-def spectrogram_stem(audio_filepath: Path, index: int) -> str:
-    """Returns the stem for the file where the spectrogram is saved."""
-    return f"{audio_filepath.stem}_spectrogram_{index}"
+def task_generate_spectrograms_for(params: dict):
+    """Generates the spectograms for the provided audio_filepath in params.
+
+    It is usually run inside a process to parallelize the creation of
+    spectograms.
+    """
+    duration = params["duration"]
+    output_dir = params["output_dir"]
+    audio_filepath = params["audio_filepath"]
+    df_prepared = params["df_prepared"]
+    random_seed = params["random_seed"]
+    ratio_random_offsets = params["ratio_random_offsets"]
+    n_fft = params["n_fft"]
+    top_db = params["top_db"]
+    freq_min = params["freq_min"]
+    freq_max = params["freq_max"]
+    dpi = params["dpi"]
+    hop_length = params["hop_length"]
+    spectrogram_width = params["spectrogram_width"]
+    spectrogram_height = params["spectrogram_height"]
+
+    process_id = os.getpid()
+    logging.info(f"[{process_id}] Processing audio_filepath {audio_filepath}")
+    output_audio_filepath_dir = output_dir / audio_filepath.stem
+    output_audio_filepath_dir.mkdir(exist_ok=True, parents=True)
+    df_audio_filemane = df_prepared[df_prepared["audio_filepath"] == audio_filepath]
+    offsets = get_offsets(
+        df=df_audio_filemane,
+        random_seed=random_seed,
+        ratio_random=ratio_random_offsets,
+    )
+    filepath_metadata = output_audio_filepath_dir / "metadata.csv"
+    logging.info(f"Saving metadata in {filepath_metadata}")
+    metadata = [
+        {
+            "offset": offset,
+            "duration": duration,
+            "audio_filepath": audio_filepath,
+            "filename_stem": spectrogram_stem(audio_filepath, idx),
+        }
+        for idx, offset in enumerate(offsets)
+    ]
+    df_metadata = pd.DataFrame(metadata)
+    logging.info(f"[{process_id}] {df_metadata.head()}")
+    df_metadata.to_csv(output_audio_filepath_dir / "metadata.csv")
+    logging.info(f"[{process_id}] Number of offsets: {len(offsets)}")
+    for idx, offset in enumerate(tqdm(offsets)):
+        filename = spectrogram_stem(audio_filepath, idx)
+        generate_and_save_annotated_spectogram2(
+            audio_filepath=audio_filepath,
+            filename=filename,
+            output_dir=output_audio_filepath_dir,
+            df=df_audio_filemane,
+            offset=offset,
+            duration=duration,
+            freq_min=freq_min,
+            freq_max=freq_max,
+            dpi=dpi,
+            n_fft=n_fft,
+            top_db=top_db,
+            hop_length=hop_length,
+            width=spectrogram_width,
+            height=spectrogram_height,
+        )
+    return audio_filepath
+
+
+def build_testing_dataset_parallel(
+    test_dir: Path,
+    train_dir: Path,
+    output_dir: Path,
+    duration: float,
+    n_fft: int,
+    top_db: float,
+    freq_min: float,
+    freq_max: float,
+    dpi: int,
+    hop_length: int,
+    spectrogram_width: int,
+    spectrogram_height: int,
+    random_seed: int = 0,
+    ratio_random_offsets: float = 0.20,
+) -> None:
+    """Main entry point to generate the spectrogram from the testing data
+    files."""
+    logging.info("Loading and parsing txt files")
+    df = features_testing.parse_all_testing_txt_files(test_dir)
+    logging.info(df.info())
+
+    logging.info("Preparing dataframe")
+    df_prepared = features_testing.prepare_df(
+        df,
+        train_dir=train_dir,
+        test_dir=test_dir,
+    )
+
+    audio_filepaths = [
+        fp for fp in df_prepared["audio_filepath"].unique() if fp.exists()
+    ]
+
+    with multiprocessing.Pool(processes=multiprocessing.cpu_count() - 2) as pool:
+        task_args = [
+            {
+                "audio_filepath": fp,
+                "output_dir": output_dir,
+                "df_prepared": df_prepared,
+                "random_seed": random_seed,
+                "ratio_random_offsets": ratio_random_offsets,
+                "duration": duration,
+                "n_fft": n_fft,
+                "top_db": top_db,
+                "freq_min": freq_min,
+                "freq_max": freq_max,
+                "dpi": dpi,
+                "hop_length": hop_length,
+                "spectrogram_width": spectrogram_width,
+                "spectrogram_height": spectrogram_height,
+            }
+            for fp in audio_filepaths
+        ]
+        pool.map(task_generate_spectrograms_for, task_args)
+        return None
 
 
 def build_testing_dataset(
@@ -245,7 +371,7 @@ def build_testing_dataset(
         fp for fp in df_prepared["audio_filepath"].unique() if fp.exists()
     ]
 
-    for audio_filepath in tqdm(audio_filepaths[:3]):
+    for audio_filepath in tqdm(audio_filepaths):
         logging.info(f"audio_filepath: {audio_filepath}")
         output_audio_filepath_dir = output_dir / audio_filepath.stem
         output_audio_filepath_dir.mkdir(exist_ok=True, parents=True)
@@ -270,7 +396,7 @@ def build_testing_dataset(
         logging.info(df_metadata.head())
         df_metadata.to_csv(output_audio_filepath_dir / "metadata.csv")
         logging.info(f"number of offsets: {len(offsets)}")
-        for idx, offset in enumerate(tqdm(offsets[:10])):
+        for idx, offset in enumerate(tqdm(offsets)):
             filename = spectrogram_stem(audio_filepath, idx)
             generate_and_save_annotated_spectogram2(
                 audio_filepath=audio_filepath,
@@ -314,7 +440,7 @@ def build_training_dataset(
     df = features_training.prepare_df(df_rumble_clearings)
     audio_filepaths = [fp for fp in df["audio_filepath"].unique() if fp.exists()]
 
-    for audio_filepath in tqdm(audio_filepaths[:3]):
+    for audio_filepath in tqdm(audio_filepaths):
         logging.info(f"audio_filepath: {audio_filepath}")
         output_audio_filepath_dir = output_dir / audio_filepath.stem
         output_audio_filepath_dir.mkdir(exist_ok=True, parents=True)
@@ -342,19 +468,8 @@ def build_training_dataset(
         df_metadata.to_csv(output_audio_filepath_dir / "metadata.csv")
 
         logging.info(f"number of offsets: {len(offsets)}")
-        # FIXME
-        for idx, offset in enumerate(tqdm(offsets[-10:-1])):
+        for idx, offset in enumerate(tqdm(offsets)):
             filename = spectrogram_stem(audio_filepath, idx)
-            # generate_and_save_annotated_spectogram(
-            #     audio_filepath=audio_filepath,
-            #     filename=filename,
-            #     output_dir=output_audio_filepath_dir,
-            #     df=df_audio_filemane,
-            #     offset=offset,
-            #     duration=duration,
-            #     freq_min=freq_min,
-            #     freq_max=freq_max,
-            # )
             generate_and_save_annotated_spectogram2(
                 audio_filepath=audio_filepath,
                 filename=filename,
@@ -371,6 +486,56 @@ def build_training_dataset(
                 width=spectrogram_width,
                 height=spectrogram_height,
             )
+
+
+def build_training_dataset_parallel(
+    filepath_rumble_clearings: Path,
+    output_dir: Path,
+    duration: float,
+    n_fft: int,
+    top_db: float,
+    freq_min: float,
+    freq_max: float,
+    dpi: int,
+    hop_length: int,
+    spectrogram_width: int,
+    spectrogram_height: int,
+    random_seed: int = 0,
+    ratio_random_offsets: float = 0.20,
+) -> None:
+    """Main entry point to generate the spectrogram from the training data
+    file."""
+
+    logging.info(f"Loading and parsing {filepath_rumble_clearings}")
+    df_rumble_clearings = features_training.parse_text_file(filepath_rumble_clearings)
+    logging.info(f"Preparing dataframe")
+    df_prepared = features_training.prepare_df(df_rumble_clearings)
+    audio_filepaths = [
+        fp for fp in df_prepared["audio_filepath"].unique() if fp.exists()
+    ]
+
+    with multiprocessing.Pool(processes=multiprocessing.cpu_count() - 2) as pool:
+        task_args = [
+            {
+                "audio_filepath": fp,
+                "output_dir": output_dir,
+                "df_prepared": df_prepared,
+                "random_seed": random_seed,
+                "ratio_random_offsets": ratio_random_offsets,
+                "duration": duration,
+                "n_fft": n_fft,
+                "top_db": top_db,
+                "freq_min": freq_min,
+                "freq_max": freq_max,
+                "dpi": dpi,
+                "hop_length": hop_length,
+                "spectrogram_width": spectrogram_width,
+                "spectrogram_height": spectrogram_height,
+            }
+            for fp in audio_filepaths
+        ]
+        pool.map(task_generate_spectrograms_for, task_args)
+        return None
 
 
 if __name__ == "__main__":
@@ -397,7 +562,8 @@ if __name__ == "__main__":
         freq_max = args["freq_max"]
         random_seed = args["random_seed"]
         ratio_random_offsets = args["ratio_random_offsets"]
-        # Default parameters
+
+        # Default parameters used to generate the spectrograms
         dpi = 96
         n_fft = 1048 * 8
         top_db = 70
@@ -423,26 +589,26 @@ if __name__ == "__main__":
             to=output_dir / "config.yaml",
             data=config_data,
         )
-        # logging.info("Building the testing dataset")
-        # build_testing_dataset(
-        #     test_dir=test_dir,
-        #     train_dir=train_dir,
-        #     output_dir=output_dir / "testing",
-        #     duration=duration,
-        #     n_fft=n_fft,
-        #     top_db=top_db,
-        #     freq_min=freq_min,
-        #     freq_max=freq_max,
-        #     dpi=dpi,
-        #     hop_length=hop_length,
-        #     spectrogram_width=spectrogram_width,
-        #     spectrogram_height=spectrogram_height,
-        #     random_seed=random_seed,
-        #     ratio_random_offsets=ratio_random_offsets,
-        # )
+        logging.info("Building the testing dataset")
+        build_testing_dataset_parallel(
+            test_dir=test_dir,
+            train_dir=train_dir,
+            output_dir=output_dir / "testing",
+            duration=duration,
+            n_fft=n_fft,
+            top_db=top_db,
+            freq_min=freq_min,
+            freq_max=freq_max,
+            dpi=dpi,
+            hop_length=hop_length,
+            spectrogram_width=spectrogram_width,
+            spectrogram_height=spectrogram_height,
+            random_seed=random_seed,
+            ratio_random_offsets=ratio_random_offsets,
+        )
 
         logging.info("Building the training dataset")
-        build_training_dataset(
+        build_training_dataset_parallel(
             filepath_rumble_clearings=filepath_rumble_clearings,
             output_dir=output_dir / "training",
             duration=duration,
