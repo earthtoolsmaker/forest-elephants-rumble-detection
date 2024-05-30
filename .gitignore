@@ -1,5 +1,11 @@
 data/01_raw/
 data/02_features/rumbles/
+data/04_models/yolov8/fruitpunch_backup/
+data/04_models/yolov8/dumb_small_dataset*
+data/04_models/yolov8/best_full_dataset
+data/backup/
+data/data_features.zip
+data/data_model_input.zip
 
 !.gitkeep
 __pycache__/
