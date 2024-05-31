@@ -67,7 +67,7 @@ def make_spectrogram(
 def make_spectrogram2(
     audio,
     sr: float,
-    n_fft: float,
+    n_fft: int,
     top_db: float,
     fmin: float,
     fmax: float,
@@ -85,17 +85,27 @@ def make_spectrogram2(
 
     # Matplotlib specific: by default it counts some inches for the padding -
     # we subtract it to match our target width and height
-    pad_inches = 0.31
+    # TODO: investigate why it does not work the same from python than from jupyterlab
+    horizontal_pad_inches = 1.94
+    vertical_pad_inches = 2.0
+
     fig = plt.figure(
-        figsize=(width / dpi + pad_inches, height / dpi + pad_inches),
+        figsize=(
+            width / dpi + horizontal_pad_inches,
+            height / dpi + vertical_pad_inches,
+        ),
         dpi=dpi,
     )
+    fig.set_dpi(dpi)
     fig.tight_layout()
     color_mesh = librosa.display.specshow(
         S_DB,
         sr=sr,
         x_axis="time",
         y_axis="log",
+        hop_length=hop_length,
+        fmin=fmin,
+        fmax=fmax,
         n_fft=n_fft,
     )
     ax = fig.get_axes()[0]

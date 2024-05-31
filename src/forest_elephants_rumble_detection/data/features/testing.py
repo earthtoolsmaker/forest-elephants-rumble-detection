@@ -64,7 +64,8 @@ def prepare_df(df: pd.DataFrame, train_dir: Path, test_dir: Path) -> pd.DataFram
     Note: t_start, t_end, freq_low and freq_high make it possible to localize rumbles on the spectrograms.
     """
     audio_filename_to_audio_filepath = make_audio_filename_to_audio_filepath(
-        train_dir=train_dir, test_dir=test_dir
+        train_dir=train_dir,
+        test_dir=test_dir,
     )
     df_result = df.copy()
     df_result["duration"] = df_result["End Time (s)"] - df_result["Begin Time (s)"]
