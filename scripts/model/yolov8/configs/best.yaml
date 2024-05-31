@@ -1,5 +1,6 @@
 ---
-epochs: 30
+epochs: 200
 patience: 100
 imgsz: 640
+close_mosaic: 35
 model_type: yolov8n.pt
