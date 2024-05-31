@@ -20,7 +20,7 @@ stages:
     cmd:
       - >-
         python ./scripts/data/build_yolov8_model_input.py
-        --input-features "./data/02_features/rumbles/spectrograms/"
+        --input-features "./data/02_features/rumbles/spectrograms_v1/"
         --testing-features-only true
         --output-dir "./data/03_model_input/yolov8/testing_features_only_full/"
         --ratio 1.0
@@ -28,7 +28,7 @@ stages:
         --loglevel "info"
     deps:
       - ./scripts/data/build_yolov8_model_input.py
-      - ./data/02_features/rumbles/spectrograms/
+      - ./data/02_features/rumbles/spectrograms_v1/
     outs:
       - ./data/03_model_input/yolov8/testing_features_only_full/
   build_yolov8_model_input_small:

@@ -42,6 +42,13 @@ train_baseline_testing_v1:
           --experiment-name baseline_testing_v1_only_features_dataset \
           --loglevel "info"
 
+train_best_testing_v1:
+	python ./scripts/model/yolov8/train.py \
+          --data ./data/03_model_input/yolov8/testing_features_only_full/data.yaml \
+          --config ./scripts/model/yolov8/configs/best.yaml \
+          --experiment-name baseline_testing_v1_only_features_dataset \
+          --loglevel "info"
+
 eval_val:
 	python ./scripts/model/yolov8/eval.py \
 	  --weights-filepath ./data/04_models/yolov8/baseline_small_dataset/weights/best.pt \
