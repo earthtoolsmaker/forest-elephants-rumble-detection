@@ -105,50 +105,6 @@ def get_metadata_df(split_features_dir: Path) -> pd.DataFrame:
     return pd.concat(xs)
 
 
-# split_features_dir = Path("./data/02_features/rumbles/spectrograms_v1/testing")
-# split_features_dir_2 = Path("./data/02_features/rumbles/spectrograms_v1/testing")
-
-# subdirs = os.listdir(split_features_dir)
-# subdirs
-# xs = []
-# for subdir in subdirs[:1]:
-#     filepath_metadata = split_features_dir / subdir / "metadata.csv"
-#     df_metadata = pd.read_csv(filepath_metadata)
-#     df_metadata["subdir"] = subdir
-#     df_metadata["spectrogram_filepath"] = df_metadata["filename_stem"].map(
-#         lambda stem: filepath_metadata.parent / f"{stem}.png"
-#     )
-#     df_metadata["annotation_filepath"] = df_metadata["filename_stem"].map(
-#         lambda stem: (
-#             filepath_metadata.parent / f"{stem}.txt"
-#             if (filepath_metadata.parent / f"{stem}.txt").exists()
-#             else None
-#         )
-#     )
-#     df_metadata = df_metadata[
-#         df_metadata["spectrogram_filepath"].isin(
-#             list((split_features_dir / subdir).glob("*.png"))
-#         )
-#     ]
-#     xs.append(df_metadata)
-
-# df_metadata = xs[0]
-# df_metadata.info()
-
-# subdir = subdirs[0]
-# subdir
-# list((split_features_dir / subdir).glob("*.png"))
-# df_metadata = xs[0]
-# df_metadata.info()
-# df_metadata[df_metadata["spectrogram_filepath"]]
-# df_metadata[df_metadata["spectrogram_filepath"].isin( list((split_features_dir / subdir).glob("*.png")))]
-# len(df_metadata[df_metadata["spectrogram_filepath"].isin( list((split_features_dir / subdir).glob("*.png")))])
-# df_metadata["spectrogram_filepath"]
-# df_metadata["spectrogram_filepath"].iloc[0].exists()
-# pd.set_option('display.max_colwidth', None)
-# df_metadata.head()
-
-
 def train_val_increasing_offsets_split(
     train_features_dir: Path,
     split_ratio: float = 0.8,

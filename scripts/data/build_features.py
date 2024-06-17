@@ -435,9 +435,18 @@ def build_testing_dataset_parallel(
     rng.shuffle(task_args)
     logging.info(f"Size of the generated dataset: {len(task_args)}")
 
-    with multiprocessing.Pool(3) as pool:
-        pool.map(task_generate_spectrograms_for2, task_args)
-        return None
+    # Batching tasks: starting a new process pool for each batch
+    # I was running into zompbie processes and it seems to fix it
+    batch_size = 200
+    for i in range(int(len(task_args) / batch_size)):
+        batch_task_args = task_args[i * batch_size : (i + 1) * batch_size]
+        logging.info(f"Starting a thread pool to run {len(batch_task_args)} tasks")
+
+        with multiprocessing.Pool(multiprocessing.cpu_count() - 2) as pool:
+            pool.map(task_generate_spectrograms_for2, batch_task_args)
+
+        logging.info(f"Finished running the batch")
+    return None
 
 
 def build_testing_dataset(
