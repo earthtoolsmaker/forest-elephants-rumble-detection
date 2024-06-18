@@ -97,3 +97,14 @@ build_features_testing_v1:
           --random-seed 0 \
           --ratio-random-offsets 0.2 \
           --loglevel "info"
+
+build_features_testing_v2:
+	python ./scripts/data/build_features2.py \
+          --input-rumbles-dir "./data/01_raw/cornell_data/Rumble/" \
+          --output-dir "./data/02_features/rumbles/spectrograms_torchaudio_v0/" \
+          --duration 164.0 \
+          --freq-min 0.0 \
+          --freq-max 250.0 \
+          --random-seed 0 \
+          --ratio-random-offsets 0.2 \
+          --loglevel "info"

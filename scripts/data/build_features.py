@@ -17,7 +17,7 @@ import forest_elephants_rumble_detection.data.features.testing as features_testi
 import forest_elephants_rumble_detection.data.features.training as features_training
 from forest_elephants_rumble_detection.data.audio import load_audio
 from forest_elephants_rumble_detection.data.offsets import get_offsets
-from forest_elephants_rumble_detection.data.spectrogram import (
+from forest_elephants_rumble_detection.data.spectrogram.librosa import (
     df_rumbles_to_all_spectrogram_yolov8_bboxes,
     make_spectrogram,
     make_spectrogram2,
