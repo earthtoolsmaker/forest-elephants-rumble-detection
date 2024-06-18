@@ -108,3 +108,10 @@ build_features_testing_v2:
           --random-seed 0 \
           --ratio-random-offsets 0.2 \
           --loglevel "info"
+
+predict:
+	python ./scripts/model/yolov8/predict_raven.py \
+          --input-dir-audio-filepaths ./data/03_model_input/sounds/rumbles/ \
+          --output-dir ./data/08_artifacts/model/rumbles/yolov8/weights \
+          --model-weights-filepath ./data/08_artifacts/model/rumbles/yolov8/weights/best.pt \
+          --loglevel "info"
