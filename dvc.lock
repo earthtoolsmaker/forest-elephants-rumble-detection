@@ -201,3 +201,24 @@ stages:
       md5: 75b51e4b3358b07fd824b0e4cb0e6f67.dir
       size: 1283210445
       nfiles: 27434
+  build_yolov8_model_input_with_torchaudio_testing_features_only:
+    cmd:
+    - python ./scripts/data/build_yolov8_model_input.py --input-features "./data/02_features/rumbles/spectrograms_torchaudio_v0/"
+      --testing-features-only true --output-dir "./data/03_model_input/yolov8/testing_features_only_full_with_torchaudio/"
+      --ratio 1.0 --ratio-train-val 0.8 --loglevel "info"
+    deps:
+    - path: ./data/02_features/rumbles/spectrograms_torchaudio_v0/
+      hash: md5
+      md5: 75b51e4b3358b07fd824b0e4cb0e6f67.dir
+      size: 1283210445
+      nfiles: 27434
+    - path: ./scripts/data/build_yolov8_model_input.py
+      hash: md5
+      md5: a9b30a1b18409510feedcd679ec22590
+      size: 16452
+    outs:
+    - path: ./data/03_model_input/yolov8/testing_features_only_full_with_torchaudio/
+      hash: md5
+      md5: a81157d254fa3629f0f9f920fe2418de.dir
+      size: 1281272961
+      nfiles: 27401
