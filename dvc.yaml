@@ -146,6 +146,20 @@ stages:
       - ./data/03_model_input/yolov8/testing_features_only_full/
     outs:
       - ./data/04_models/yolov8/best_testing_only_features_full_dataset/
+  train_yolov8_best_testing_features_only_full_dataset_with_torchaudio:
+    cmd:
+      - >-
+        python ./scripts/model/yolov8/train.py
+        --data ./data/03_model_input/yolov8/testing_features_only_full_with_torchaudio/data.yaml
+        --config ./scripts/model/yolov8/configs/best.yaml
+        --experiment-name best_testing_only_features_full_dataset_with_torchaudio
+        --loglevel info
+    deps:
+      - ./scripts/model/yolov8/train.py
+      - ./scripts/model/yolov8/configs/best.yaml
+      - ./data/03_model_input/yolov8/testing_features_only_full_with_torchaudio/
+    outs:
+      - ./data/04_models/yolov8/best_testing_only_features_full_dataset_with_torchaudio/
   # TODO: eval the baseline and the best models here instead of the dumb
   eval_yolov8_dumb_small_dataset:
     cmd:
