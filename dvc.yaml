@@ -1,5 +1,21 @@
 ---
 stages:
+  build_features_with_torchaudio:
+    cmd:
+      - >-
+        python ./scripts/data/build_features2.py
+        --input-rumbles-dir "./data/01_raw/cornell_data/Rumble/"
+        --output-dir "./data/02_features/rumbles/spectrograms_torchaudio_v0/"
+        --duration 164.0
+        --freq-min 0.0
+        --freq-max 250.0
+        --random-seed 0
+        --ratio-random-offsets 0.2
+        --loglevel "info"
+    deps:
+      - ./scripts/data/build_features2.py
+    outs:
+      - ./data/02_features/rumbles/spectrograms_torchaudio_v0/
   build_features:
     cmd:
       - >-
@@ -16,6 +32,21 @@ stages:
       - ./scripts/data/build_features.py
     outs:
       - ./data/02_features/rumbles/spectrograms/
+  build_yolov8_model_input_with_torchaudio_testing_features_only:
+    cmd:
+      - >-
+        python ./scripts/data/build_yolov8_model_input.py
+        --input-features "./data/02_features/rumbles/spectrograms_torchaudio_v0/"
+        --testing-features-only true
+        --output-dir "./data/03_model_input/yolov8/testing_features_only_full_with_torchaudio/"
+        --ratio 1.0
+        --ratio-train-val 0.8
+        --loglevel "info"
+    deps:
+      - ./scripts/data/build_yolov8_model_input.py
+      - ./data/02_features/rumbles/spectrograms_torchaudio_v0/
+    outs:
+      - ./data/03_model_input/yolov8/testing_features_only_full_with_torchaudio/
   build_yolov8_model_input_testing_features_only:
     cmd:
       - >-

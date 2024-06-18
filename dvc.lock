@@ -184,3 +184,20 @@ stages:
       md5: a07d652b00cdba00295c299070d54945.dir
       size: 4559030689
       nfiles: 25363
+  build_features_with_torchaudio:
+    cmd:
+    - python ./scripts/data/build_features2.py --input-rumbles-dir "./data/01_raw/cornell_data/Rumble/"
+      --output-dir "./data/02_features/rumbles/spectrograms_torchaudio_v0/" --duration
+      164.0 --freq-min 0.0 --freq-max 250.0 --random-seed 0 --ratio-random-offsets
+      0.2 --loglevel "info"
+    deps:
+    - path: ./scripts/data/build_features2.py
+      hash: md5
+      md5: 376fe12aab4bb2ae81fcea985f528b9b
+      size: 9031
+    outs:
+    - path: ./data/02_features/rumbles/spectrograms_torchaudio_v0/
+      hash: md5
+      md5: 75b51e4b3358b07fd824b0e4cb0e6f67.dir
+      size: 1283210445
+      nfiles: 27434
