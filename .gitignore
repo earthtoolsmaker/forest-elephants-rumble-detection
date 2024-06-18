@@ -6,6 +6,7 @@ data/04_models/yolov8/dumb_small_dataset*
 data/04_models/yolov8/best_full_dataset
 data/04_models/yolov8/baseline_testing_v1_only_features_dataset
 data/04_models/yolov8/best_testing_only_features_full_dataset_with_torchaudio_backup/
+data/05_model_output/yolov8/predict/
 data/backup/
 data/data_features.zip
 data/data_model_input.zip

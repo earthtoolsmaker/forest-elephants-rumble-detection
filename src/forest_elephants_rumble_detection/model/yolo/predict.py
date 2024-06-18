@@ -72,6 +72,7 @@ def inference(
     n_fft: int,
     hop_length: int,
     batch_size: int,
+    output_dir: None | Path,
 ) -> list:
     """
     Inference entry point for running on an entire audio_filepath sound file.
@@ -102,7 +103,12 @@ def inference(
     results = []
 
     for batch in batch_sequence(images, batch_size=batch_size):
-        results.extend(model.predict(batch))
+        if output_dir and output_dir.exists():
+            logging.info("Saving prediction for batch")
+            results.extend(model.predict(batch, save=True, save_dir=output_dir))
+        else:
+            logging.info("Skipping for batch")
+            results.extend(model.predict(batch, verbose=False))
 
     return results
 
@@ -192,6 +198,7 @@ def pipeline(
     n_fft: int,
     hop_length: int,
     batch_size: int,
+    output_dir: None | Path,
 ) -> pd.DataFrame:
     """
     Main entrypoint to generate the predictions on a set of audio_filepaths
@@ -209,6 +216,7 @@ def pipeline(
             n_fft=n_fft,
             hop_length=hop_length,
             batch_size=batch_size,
+            output_dir=output_dir,
         )
         df = to_dataframe(
             yolov8_predictions=yolov8_predictions,
