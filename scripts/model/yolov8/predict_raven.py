@@ -28,7 +28,7 @@ def make_cli_parser() -> argparse.ArgumentParser:
     parser.add_argument(
         "--verbose",
         help="Should it be verbose? Can take significantly longer as it will save some intermediate spectrograms and predictions",
-        action='store_true',
+        action="store_true",
     )
     parser.add_argument(
         "--overlap",
@@ -92,8 +92,6 @@ if __name__ == "__main__":
 
         input_dir = args["input_dir_audio_filepaths"]
         output_dir = args["output_dir"]
-        logging.info(input_dir)
-        logging.info(output_dir)
 
         audio_filepaths = [fp for fp in input_dir.iterdir() if fp.is_file()]
 
@@ -104,6 +102,11 @@ if __name__ == "__main__":
         batch_size = args["batch_size"]
 
         output_dir.mkdir(parents=True, exist_ok=True)
+
+        # If the verbose parameter is set, save intermediate results
+        verbose = args["verbose"]
+        save_spectrograms = verbose
+        save_predictions = verbose
 
         df_pipeline = pipeline(
             model=model,
@@ -117,9 +120,13 @@ if __name__ == "__main__":
             n_fft=config["n_fft"],
             hop_length=config["hop_length"],
             batch_size=batch_size,
-            output_dir=output_dir if args["verbose"] else None,
+            output_dir=output_dir,
+            save_spectrograms=save_spectrograms,
+            save_predictions=save_predictions,
+            verbose=args["verbose"],
         )
 
+        logging.info(f"Saving the results")
         logging.info(df_pipeline.head())
         df_pipeline.to_csv(output_dir / "results.csv")
         yaml_write(

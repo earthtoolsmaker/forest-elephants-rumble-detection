@@ -1,11 +1,14 @@
 import logging
 import math
+import time
 from pathlib import Path
+from typing import Tuple
 
 import pandas as pd
 import torch
 import torchaudio
 from PIL import Image
+from tqdm import tqdm
 from ultralytics import YOLO
 
 from forest_elephants_rumble_detection.data.spectrogram.torchaudio import (
@@ -61,6 +64,20 @@ def chunk(
     ]
 
 
+def load_audio(audio_filepath: Path) -> Tuple[torch.Tensor, int]:
+    """
+    Loads an audio_filepath and returns the waveform and sample_rate of the file.
+    """
+    start_time = time.time()
+    waveform, sample_rate = torchaudio.load(audio_filepath)
+    end_time = time.time()
+    elapsed_time = end_time - start_time
+    logging.info(
+        f"Elapsed time to load audio file {audio_filepath.name}: {elapsed_time:.2f}s"
+    )
+    return waveform, sample_rate
+
+
 def inference(
     model: YOLO,
     audio_filepath: Path,
@@ -72,13 +89,17 @@ def inference(
     n_fft: int,
     hop_length: int,
     batch_size: int,
-    output_dir: None | Path,
+    output_dir: Path,
+    save_spectrograms: bool,
+    save_predictions: bool,
+    verbose: bool,
 ) -> list:
     """
     Inference entry point for running on an entire audio_filepath sound file.
     """
     logging.info(f"Loading audio filepath {audio_filepath}")
-    waveform, sample_rate = torchaudio.load(audio_filepath)
+    # waveform, sample_rate = torchaudio.load(audio_filepath)
+    waveform, sample_rate = load_audio(audio_filepath)
     waveforms = chunk(
         waveform=waveform,
         sample_rate=sample_rate,
@@ -86,6 +107,7 @@ def inference(
         overlap=overlap,
     )
     logging.info(f"Chunking the waveform into {len(waveforms)} overlapping clips")
+    logging.info(f"Generating {len(waveforms)} spectrograms")
     images = [
         Image.fromarray(
             waveform_to_np_image(
@@ -98,17 +120,28 @@ def inference(
                 height=height,
             )
         )
-        for idx, y in enumerate(waveforms)
+        for y in tqdm(waveforms)
     ]
+    if save_spectrograms:
+        save_dir = output_dir / "spectrograms"
+        logging.info(f"Saving spectrograms in {save_dir}")
+        save_dir.mkdir(exist_ok=True, parents=True)
+        for i, image in tqdm(enumerate(images), total=len(images)):
+            image.save(save_dir / f"spectrogram_{i}.png")
+
     results = []
 
-    for batch in batch_sequence(images, batch_size=batch_size):
-        if output_dir and output_dir.exists():
-            logging.info("Saving prediction for batch")
-            results.extend(model.predict(batch, save=True, save_dir=output_dir))
-        else:
-            logging.info("Skipping for batch")
-            results.extend(model.predict(batch, verbose=False))
+    batches = list(batch_sequence(images, batch_size=batch_size))
+    logging.info(f"Running inference on the spectrograms, {len(batches)} batches")
+    for batch in tqdm(batches):
+        results.extend(model.predict(batch, verbose=verbose))
+
+    if save_predictions:
+        save_dir = output_dir / "predictions"
+        save_dir.mkdir(parents=True, exist_ok=True)
+        logging.info(f"Saving predictions in {save_dir}")
+        for i, yolov8_prediction in tqdm(enumerate(results), total=len(results)):
+            yolov8_prediction.save(str(save_dir / f"prediction_{i}.png"))
 
     return results
 
@@ -198,13 +231,19 @@ def pipeline(
     n_fft: int,
     hop_length: int,
     batch_size: int,
-    output_dir: None | Path,
+    output_dir: Path,
+    save_spectrograms: bool,
+    save_predictions: bool,
+    verbose: bool,
 ) -> pd.DataFrame:
     """
     Main entrypoint to generate the predictions on a set of audio_filepaths
     """
     dfs = []
     for audio_filepath in audio_filepaths:
+        start_time = time.time()
+        sub_output_dir = output_dir / audio_filepath.stem
+        sub_output_dir.mkdir(exist_ok=True, parents=True)
         yolov8_predictions = inference(
             model=model,
             audio_filepath=audio_filepath,
@@ -216,7 +255,10 @@ def pipeline(
             n_fft=n_fft,
             hop_length=hop_length,
             batch_size=batch_size,
-            output_dir=output_dir,
+            output_dir=sub_output_dir,
+            save_spectrograms=save_spectrograms,
+            save_predictions=save_predictions,
+            verbose=verbose,
         )
         df = to_dataframe(
             yolov8_predictions=yolov8_predictions,
@@ -226,5 +268,13 @@ def pipeline(
             freq_max=freq_max,
         )
         df["audio_filepath"] = str(audio_filepath)
+        df["instance_class"] = "rumble"
+        df.to_csv(sub_output_dir / "results.csv")
         dfs.append(df)
+        end_time = time.time()
+        # Calculate elapsed time
+        elapsed_time = end_time - start_time
+        logging.info(
+            f"Elapsed time to analyze {audio_filepath.name}: {elapsed_time:.2f}s"
+        )
     return pd.concat(dfs)
