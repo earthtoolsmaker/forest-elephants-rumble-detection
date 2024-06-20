@@ -120,6 +120,16 @@ spectrograms and predictions, they will be located in the `output-dir`.
 | ![Spectrogram 1](./docs/assets/images/spectrograms/spectrogram_1.png) | ![Prediction 1](./docs/assets/images/predictions/prediction_1.png) |
 | ![Spectrogram 2](./docs/assets/images/spectrograms/spectrogram_2.png) | ![Prediction 2](./docs/assets/images/predictions/prediction_2.png) |
 
+Below is a sample of a generated CSV file:
+
+| probability | freq_start | freq_end | t_start | t_end | audio_filepath | instance_class |
+|:-----------:|:----------:|:--------:|:-------:|:-----:|:--------------:|:--------------:|
+| 0.7848126888275146 | 185.34618616104126 | 238.925039768219 | 6.117525324225426 | 11.526521265506744 | data/08_artifacts/audio/rumbles/sample_0.wav | rumble |
+| 0.7789380550384521 | 187.46885657310486 | 237.14002966880798 | 107.4117157459259 | 112.39507365226746 | data/08_artifacts/audio/rumbles/sample_0.wav | rumble |
+| 0.6963282823562622 | 150.82329511642456 | 238.47350478172302 | 89.08285737037659 | 94.3071436882019 | data/08_artifacts/audio/rumbles/sample_0.wav | rumble |
+| 0.6579649448394775 | 203.18885147571564 | 231.6151112318039 | 44.13426876068115 | 47.50721764564514 | data/08_artifacts/audio/rumbles/sample_0.wav | rumble |
+| ... | ... | ... | ... | ... | ... | ... |
+
 
 ## Setup
 
