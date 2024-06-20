@@ -160,37 +160,27 @@ approximately 20 seconds in total:
 
 ### Back of the envelope calculation
 
-- Number of sound recorders: `NSR = 50`
-- Number of days to analyze: `ND = 30`  - 1 month
-- Size of a 24hour audio recording `W = 657 MB`
-- Amount of data to analyze: `NSR x ND x W = 986 GB` - 1 month
-- Time to process a 24h audio file with a CPU: `TCPU = 35 s`
-- Time to process a 24h audio file with a GPU: `TGPU = 20 s`
+- Number of sound recorders: $`NSR = 50`$
+- Number of days to analyze: $`ND = 30`$  (1 month)
+- Size of a 24hour audio recording $`W = 657`$ MB
+- Amount of data to analyze: $`NSR x ND x W = 986`$ GB (1 month)
+- Time to process a 24h audio file with a CPU: $`TCPU = 35`$ s
+- Time to process a 24h audio file with a GPU: $`TGPU = 20 s`$ s
 
 #### With CPU
 
 On a CPU setup with 8 cores, analyzing 1 month of sound data would require:
-
-```math
-NSR \times ND \times TCPU = 50 \times 30 \ 35 = 14.6 hours
-```
+$`NSR \times ND \times TCPU = 50 \times 30 \ 35 = 14.6`$ hours
 
 To analyze 6 months of sound data - ~6TB - it would require:
-
-```math
-NSR \times ND \times TCPU = 50 \times 180 \ 35 = 3.6 days
-```
+$`NSR \times ND \times TCPU = 50 \times 180 \ 35 = 3.6`$ days
 
 #### With CPU + GPU
 
 On a CPU setup with 8 cores, analyzing 1 month of sound data would require:
-
-```math
-NSR \times ND \times TCPU = 50 \times 30 \ 20 = 8.3 hours
-```
+$`NSR \times ND \times TCPU = 50 \times 30 \ 20 = 8.3`$ hours
 
 To analyze 6 months of sound data - ~6TB - it would require:
-
 $`NSR \times ND \times TCPU = 50 \times 180 \ 35 = 2.1`$ days
 
 ## Setup
