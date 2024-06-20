@@ -164,8 +164,8 @@ approximately 20 seconds in total:
 - Number of days to analyze: $`ND = 30`$  (1 month)
 - Size of a 24hour audio recording $`W = 657`$ MB
 - Amount of data to analyze: $`NSR \times ND \times W = 986`$ GB (1 month)
-- Time to process a 24h audio file with a CPU: $`TCPU = 35`$ s
-- Time to process a 24h audio file with a GPU: $`TGPU = 20 s`$ s
+- Time to process a 24h audio file with a CPU: $`TCPU = 35`$s
+- Time to process a 24h audio file with a GPU: $`TGPU = 20`$s
 
 #### With CPU
 
