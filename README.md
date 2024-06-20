@@ -90,6 +90,37 @@ an advanced sound analyzer capable of processing these extensive audio
 recordings at high speed, allowing for the analysis of terabytes of audio data
 in just a few days.
 
+## Run
+
+Once one has followed the setup section below, it is possible to test the
+rumble detector using the following command:
+
+```sh
+python ./scripts/model/yolov8/predict_raven.py \
+   --input-dir-audio-filepaths ./data/08_artifacts/audio/rumbles/ \
+   --output-dir ./data/05_model_output/yolov8/predict/ \
+   --model-weights-filepath ./data/08_artifacts/model/rumbles/yolov8/weights/best.pt \
+   --verbose \
+   --loglevel "info"
+```
+
+The pipeline will do the following:
+
+1. Generate spectrograms in the frequency range 0-250Hz, where all the elephant
+   rumbles are located
+2. Run the rumble object detector on batches of spectrograms
+3. Save the predictions as a CSV
+
+__Note__: The verbose flag tells the command to also persist the generated
+spectrograms and predictions, they will be located in the `output-dir`.
+
+| Spectrogram | Prediction |
+|:-----------:|:----------:|
+| ![Spectrogram 0](./docs/assets/images/spectrograms/spectrogram_0.png) | ![Prediction 0](./docs/assets/images/predictions/prediction_0.png) |
+| ![Spectrogram 1](./docs/assets/images/spectrograms/spectrogram_1.png) | ![Prediction 1](./docs/assets/images/predictions/prediction_1.png) |
+| ![Spectrogram 2](./docs/assets/images/spectrograms/spectrogram_2.png) | ![Prediction 2](./docs/assets/images/predictions/prediction_2.png) |
+
+
 ## Setup
 
 ### Dependencies
