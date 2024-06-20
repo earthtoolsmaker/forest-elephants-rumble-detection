@@ -5,6 +5,65 @@ Contains a collection of software packages for passive acoustic monitoring
 
 ![Elephant rumbles](./docs/assets/images/spectrograms/rumbles_intro.png)
 
+## Introduction
+
+Elephant rumbles are low-frequency vocalizations produced by elephants,
+primarily for communication. These rumbles are a fundamental part of elephant
+social interactions and serve various purposes within their groups. Here’s a
+detailed explanation:
+
+### Characteristics of Elephant Rumbles
+
+1. __Low Frequency__: Elephant rumbles typically fall in the infrasound range,
+   below 20 Hz, which is often below the threshold of human hearing. However,
+some rumbles can also be heard by humans as a low, throaty sound.
+
+2. __Long Distance Communication__: Due to their low frequency, rumbles can
+   travel long distances, sometimes several kilometers, allowing elephants to
+communicate with each other across vast areas, even when they are out of sight.
+It can also travel through dense forests as the wavelength is very large.
+
+3. __Vocal Production__: Rumbles are produced by the larynx and can vary in
+   frequency, duration, and modulation. Elephants use different types of
+rumbles to convey different messages.
+
+### Functions of Elephant Rumbles
+
+1. __Coordination and Social Bonding__: Elephants use rumbles to maintain
+   contact with members of their herd, coordinate movements, and reinforce
+social bonds. For example, a matriarch might use a rumble to lead her group to
+a new location.
+
+2. __Reproductive Communication__: Male elephants, or bulls, use rumbles to
+   communicate their reproductive status and readiness to mate. Females also
+use rumbles to signal their estrus status to potential mates.
+
+3. __Alarm and Distress Calls__: Rumbles can signal alarm or distress, warning
+   other elephants of potential danger. These rumbles can mobilize the herd and
+prompt protective behavior.
+
+4. __Mother-Calf Communication__: Mothers and calves use rumbles to stay in
+   contact, especially when they are separated. Calves may rumble to signal
+hunger or distress, prompting a response from their mothers.
+
+### Importance of Understanding Elephant Rumbles
+
+1. __Conservation Efforts__: Understanding elephant communication helps in
+   conservation efforts by providing insights into their social structure,
+habitat needs, and responses to environmental changes.
+
+2. __Human-Elephant Conflict Mitigation__: By recognizing alarm rumbles,
+   conservationists can better manage and mitigate conflicts between humans and
+elephants, especially in regions where their habitats overlap.
+
+3. __Enhancing Animal Welfare__: For elephants in captivity, understanding
+   their rumbles can help caretakers improve their welfare by addressing their
+social and environmental needs more effectively.
+
+Overall, elephant rumbles are a vital aspect of their complex communication
+system, reflecting the sophistication of their social interactions and the
+importance of acoustic signals in their daily lives.
+
 ## Setup
 
 ### Dependencies
