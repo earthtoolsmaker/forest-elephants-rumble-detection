@@ -150,12 +150,12 @@ in total:
 
 ### GPU + CPU
 
-Processing a 24-hour audio file using a GPU and an 8-core CPU takes
-approximately 18 seconds in total:
+Processing a 24-hour audio file using a GPU (T4) and an 8-core CPU takes
+approximately 20 seconds in total:
 
 - __Loading the audio file__: ~4 seconds
 - __Generating spectrograms__: ~11 seconds
-- __Running model inference__: ~2 seconds
+- __Running model inference__: ~4 seconds
 - __Miscellaneous tasks__: ~1 second
 
 ## Setup
