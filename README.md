@@ -191,9 +191,7 @@ NSR \times ND \times TCPU = 50 \times 30 \ 20 = 8.3 hours
 
 To analyze 6 months of sound data - ~6TB - it would require:
 
-```math
-NSR \times ND \times TCPU = 50 \times 180 \ 35 = 2.1 days
-```
+$`NSR \times ND \times TCPU = 50 \times 180 \ 35 = 2.1`$ days
 
 ## Setup
 
