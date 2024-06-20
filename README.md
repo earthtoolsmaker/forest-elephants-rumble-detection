@@ -64,6 +64,23 @@ Overall, elephant rumbles are a vital aspect of their complex communication
 system, reflecting the sophistication of their social interactions and the
 importance of acoustic signals in their daily lives.
 
+## Collaboration
+
+This work is a collaboration with [The Elephant Listening
+Project](https://www.elephantlisteningproject.org/) and [The Cornell
+Lab](https://www.birds.cornell.edu/home/).
+
+> To conserve the tropical forests of Africa through acoustic monitoring, sound
+> science, and education, focusing on forest elephants
+>
+> - The Elephant Listening Project
+
+Fifty microphones are arranged in a grid within the Tropical Forest of Gabon,
+continuously recording forest sounds around the clock. The provided software is
+an advanced sound analyzer capable of processing these extensive audio
+recordings at high speed, allowing for the analysis of terabytes of audio data
+in just a few days.
+
 ## Setup
 
 ### Dependencies
