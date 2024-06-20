@@ -5,6 +5,15 @@ Contains a collection of software packages for passive acoustic monitoring
 
 ![Elephant rumbles](./docs/assets/images/spectrograms/rumbles_intro.png)
 
+The low fundamental frequencies of elephant rumbles are located at the bottom
+of the spectrogram and typically range from 14-35 Hz. These are the primary
+frequencies of the rumbles. Harmonics, which are integer multiples of the
+fundamental frequencies, appear as several horizontal lines above the
+fundamental frequency. For example, if the fundamental frequency is 20 Hz, the
+harmonics will be at 40 Hz, 60 Hz, 80 Hz, and so on. These harmonic lines are
+spaced at regular intervals and are usually less intense (lighter) than the
+fundamental frequency.
+
 ## Introduction
 
 Elephant rumbles are low-frequency vocalizations produced by elephants,
