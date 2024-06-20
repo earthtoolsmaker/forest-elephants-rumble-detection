@@ -130,6 +130,33 @@ Below is a sample of a generated CSV file:
 | 0.6579649448394775 | 203.18885147571564 | 231.6151112318039 | 44.13426876068115 | 47.50721764564514 | data/08_artifacts/audio/rumbles/sample_0.wav | rumble |
 | ... | ... | ... | ... | ... | ... | ... |
 
+## Benchmark
+
+The aim of this project is to enable the rapid analysis of large-scale audio
+datasets, potentially reaching terabyte scales. By leveraging multiprocessing
+and utilizing the maximum number of CPU and GPU cores, we strive to optimize
+processing speed and efficiency. Benchmark analyses have been conducted on both
+CPU and GPU to ensure optimal performance.
+
+### CPU
+
+Processing a 24-hour audio file on an 8-core CPU takes approximately 35 seconds
+in total:
+
+- __Loading the audio file__: ~4 seconds
+- __Generating spectrograms__: ~11 seconds
+- __Running model inference__: ~19 seconds
+- __Miscellaneous tasks__: ~1 second
+
+### GPU + CPU
+
+Processing a 24-hour audio file using a GPU and an 8-core CPU takes
+approximately 18 seconds in total:
+
+- __Loading the audio file__: ~4 seconds
+- __Generating spectrograms__: ~11 seconds
+- __Running model inference__: ~2 seconds
+- __Miscellaneous tasks__: ~1 second
 
 ## Setup
 
