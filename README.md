@@ -1,6 +1,9 @@
 # Forest Elephants Rumble Detection
 
-Contains a collection of software packages for passive acoustic monitoring (PAM) of forest elephants rumbles.
+Contains a collection of software packages for passive acoustic monitoring
+(PAM) of forest elephants rumbles.
+
+![Elephant rumbles](./docs/assets/images/spectrograms/rumbles_intro.png)
 
 ## Setup
 
