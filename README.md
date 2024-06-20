@@ -151,38 +151,6 @@ docker run --rm \
   earthtoolsmaker/elephantrumbles-detector:latest
 ```
 
-### Docker
-
-The rumble detector is also packaged as a Docker image, which makes it portable on different operating systems and setups as long as Docker is installed.
-
-Run the following command to pull the docker image:
-
-```sh
-docker pull earthtoolsmaker/elephantrumbles-detector:latest
-```
-
-Run the following command to run the docker container:
-
-```sh
-docker run --rm earthtoolsmaker/elephantrumbles-detector:latest
-```
-
-The audio files and predictions are locked inside the container, so it is not really useful. But it should already show that it is able to detect rumbles.
-
-To load your own audio files and save the results in your machine, one needs to mount two directories into the docker container as follows:
-
-- __input-dir-audio_filepaths__: This is the folder that contains the audio files to be analyzed
-- __output-dir__: This is where the artifacts and predictions will be saved on your machine
-
-In the example below, the __input-dir-audio_filepaths__ is `./data/03_model_input/sounds/rumbles/` and the __output-dir__ is `./runs/predict/`. The program analyzes audio files present in the input-dir-audio-filepaths and persists results in output-dir.
-
-```sh
-docker run --rm \
-  -v ./data/03_model_input/sounds/rumbles/:/app/data/08_artifacts/audio/rumbles/ \
-  -v ./runs/predict/:/app/data/05_model_output/yolov8/predict \
-  earthtoolsmaker/elephantrumbles-detector:latest
-```
-
 ### Pipeline overview and outputs
 
 The pipeline will do the following:
