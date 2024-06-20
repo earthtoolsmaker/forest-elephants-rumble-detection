@@ -1,3 +1,7 @@
+"""
+Training YOLO models.
+"""
+
 from pathlib import Path
 
 from ultralytics import YOLO
@@ -29,9 +33,6 @@ def train(
         "hsv_h": 0.0,
         "hsv_s": 0.0,
         "hsv_v": 0.0,
-        # "hsv_h": 0.015,
-        # "hsv_s": 0.7,
-        # "hsv_v": 0.4,
         "mixup": 0.5,
         "scale": 0.0,
         "close_mosaic": 10,

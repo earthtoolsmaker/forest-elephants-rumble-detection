@@ -1,4 +1,7 @@
-"""Util functions to work with yolov8 format."""
+"""Util functions to work with the YOLOv8 format.
+
+More information here: https://roboflow.com/formats/yolov8-pytorch-txt
+"""
 
 from pathlib import Path
 

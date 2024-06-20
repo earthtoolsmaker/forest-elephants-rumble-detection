@@ -1,4 +1,7 @@
-"""Rumbles utils"""
+"""Rumbles utils
+
+This module provides functions to work with raven_data files and extracting
+bounding boxes for the rumbles."""
 
 import pandas as pd
 

@@ -1,3 +1,7 @@
+"""
+Inference and prediction for trained YOLO models.
+"""
+
 import logging
 import math
 import time

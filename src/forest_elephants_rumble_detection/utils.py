@@ -1,3 +1,7 @@
+"""
+Utils to work with yaml and json formats.
+"""
+
 import json
 from pathlib import Path
 
@@ -30,5 +34,8 @@ def yaml_write(to: Path, data: dict, dumper=MyDumper) -> None:
 
 
 def write_json(to: Path, data: dict) -> None:
+    """
+    Saves a dictionnary `data` to disk at the `to` location.
+    """
     with open(to, "w") as fp:
         json.dump(data, fp)
