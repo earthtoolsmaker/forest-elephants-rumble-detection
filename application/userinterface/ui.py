@@ -32,7 +32,7 @@ class Worker(QThread):
 
     def run(self):
             
-        config = yaml_read(Path("./data/08_artifacts/model/rumbles/yolov8/inference_config.yaml"))
+        config = yaml_read(Path("./application/config.yaml"))
 
         logging.basicConfig(level=config["loglevel"].upper())
 
