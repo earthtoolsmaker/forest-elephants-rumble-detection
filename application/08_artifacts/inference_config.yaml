@@ -1,0 +1,15 @@
+---
+duration: 164.0
+freq_min: 0.0
+freq_max: 250.0
+n_fft: 4096
+hop_length: 1024
+width: 640
+height: 256
+overlap: 10
+batch_size: 64
+verbose: True
+save_spectrograms : False
+save_predictions : False
+model_weights_filepath : "./data/08_artifacts/model/rumbles/yolov8/weights/best.pt"
+loglevel: "info"
