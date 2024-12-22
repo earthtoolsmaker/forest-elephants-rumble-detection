@@ -1,4 +1,4 @@
-# Forest Elephants Rumble Detection
+# Forest Elephants Rumble Detection 🐘
 
 Contains a collection of software packages for passive acoustic monitoring
 (PAM) of forest elephants rumbles.
@@ -13,6 +13,8 @@ fundamental frequency. For example, if the fundamental frequency is 20 Hz, the
 harmonics will be at 40 Hz, 60 Hz, 80 Hz, and so on. These harmonic lines are
 spaced at regular intervals and are usually less intense (lighter) than the
 fundamental frequency.
+
+[<img src="./docs/assets/images/ml_space.png" />](https://www.earthtoolsmaker.org/spaces/forest_elephant_rumble_detection/)
 
 ## Introduction
 
